@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -12,42 +12,74 @@ angular.module('starter.controllers', [])
   // Form data for the login modal
   $scope.loginData = {};
   $scope.account = {};
-  $scope.loggedIn = false;
+  $scope.user = JSON.parse(window.localStorage.getItem('user'));
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
     scope: $scope
   }).then(function(modal) {
-    $scope.modal = modal;
+    $scope.loginModal = modal;
   });
+
+  // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/logout.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.logoutModal = modal;
+  });
+
 
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
-    $scope.modal.hide();
+    $scope.loginModal.hide();
   };
+
+  $scope.closeLogout = function() {
+    $scope.logoutModal.hide();
+  }
 
   // Open the login modal
   $scope.login = function() {
-    $scope.modal.show();
+    $scope.loginModal.show();
   };
 
   $scope.logout = function() {
-    $scope.loggedIn = false;
-    console.log('Logging Out', $scope.loggedIn);
-  }
+    $scope.logoutModal.show();
+  };
 
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
-    $scope.loggedIn = true;
-    console.log('Doing login', $scope.loginData);
-
-
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
+    $http({
+      method: 'POST',
+      url: 'http://addictionresearch.herokuapp.com/sessions',
+      data: {
+        "session": {
+            "email": $scope.loginData.email,
+            "password": $scope.loginData.password
+        }
+      }
+    }).then(function successCallback(response) {
+      window.localStorage.setItem('user', JSON.stringify(response.data.user));
+      $scope.user = JSON.parse(window.localStorage.getItem('user'));
       $scope.closeLogin();
-      window.location.hash = '#/app/profile'
-    }, 1000);
+      window.location.hash = '#/app/profile';
+
+    }, function errorCallback(response) {
+      console.log('an error has ocurred', response);
+      alert('An Error has Occured, Please Try again');
+    });
+  };
+
+  $scope.doLogout = function () {
+    window.localStorage.removeItem('user');
+    $scope.user = {};
+    $scope.closeLogout();
+    window.location.hash = "#/app/home"
+  };
+
+  $scope.doFacebook = function() {
+    // TBD
+    console.log('Login with Facebook');
   };
 })
 

@@ -7,6 +7,7 @@
 angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers'])
 
 .run(function($ionicPlatform) {
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -21,6 +22,12 @@ angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers'])
     }
   });
 })
+
+.run(function($http) {
+  // set headers
+  if(typeof(window.localStorage.user) !== "undefined"){
+    $http.defaults.headers.common.Authorization = JSON.parse(window.localStorage.getItem('user')).auth_token;
+}})
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
@@ -44,6 +51,14 @@ angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers'])
     views: {
       'menuContent': {
         templateUrl: 'templates/home.html'
+      }
+    }
+  })
+  .state('app.profile', {
+    url: '/profile',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/profile.html'
       }
     }
   });

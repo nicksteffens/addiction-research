@@ -23,10 +23,13 @@
             </div>
           </div>
         </ion-item>
-        <ion-item menu-close ng-click="login()">
+        <ion-item menu-close ng-click="login()" ng-hide="user">
           Login
         </ion-item>
-        <ion-item menu-close href="#/app/create">
+        <ion-item menu-close ng-click="logout()" ng-show="user">
+          Logout
+        </ion-item>
+        <ion-item menu-close href="#/app/create" ng-hide="user">
           Create Account
         </ion-item>
       </ion-list>

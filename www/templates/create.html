@@ -1,35 +1,32 @@
 <ion-view view-title="Create">
   <ion-header-bar>
-    <h1 class="title">Create Account</h1>
+    <h1 class="title">Create an Account</h1>
   </ion-header-bar>
   <ion-content>
-    <h3>Please Fill out the following form:</h3>
     <form ng-submit="doCreate()">
       <div class="list">
-        <label class="item item-input">
-          <span class="input-label">Medical ID</span>
-          <input type="text" ng-model="createUser.medical_id" placeholder="Medical ID">
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Email</span>
+          <input type="email" ng-model="createUser.email" placeholder="your_email@something.com">
         </label>
-        <label class="item item-input">
+        <label class="item item-input item-stacked-label">
           <span class="input-label">Password</span>
-          <input type="text" ng-model="createUser.password" placeholder="Password">
+          <input type="password" ng-model="createUser.password" placeholder="Password">
         </label>
-        <label class="item item-input">
+        <label class="item item-input item-stacked-label">
           <span class="input-label"> Confirm Password</span>
-          <input type="text" ng-model="createUser.confirm" placeholder="Confirm Password">
+          <input type="password" ng-model="createUser.confirm" placeholder="Confirm Password">
         </label>
-        <div class="item item-input">
-          <div class="row">
-            <h4 class="col">Height</h4>
-          </div>
-          <div class="row">
-            <input type="text" class="col col-50"ng-model="createUser.height.feet" placeholder="Feet">
-            <input type="text" class="col col-50"ng-model="createUser.height.inches" placeholder="Inches">
-          </div>
-        </div>
         <label class="item item-input">
-          <span class="input-label">Weight</span>
-          <input type="text" ng-model="createUser.weight" placeholder="LBS">
+          <span class="input-label">Phone Number</span>
+          <input type="tel" ng-model="createUser.phone" placeholder="(555) 555-5555">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Date of Birth</span>
+          <input type="date" ng-model="createUser.date_of_birth" placeholder="MM-DD-YYYY">
+        </label>
+        <label class="item">
+          <button class="button button-block button-calm" type="submit">Create Account</button>
         </label>
       </div>
     </form>

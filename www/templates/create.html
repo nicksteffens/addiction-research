@@ -3,18 +3,33 @@
     <h1 class="title">Create Account</h1>
   </ion-header-bar>
   <ion-content>
-    <div class="col col-50 col-offset-25">
-      <p>Please provide the following information</p>
-    </div>
+    <h3>Please Fill out the following form:</h3>
     <form ng-submit="doCreate()">
       <div class="list">
         <label class="item item-input">
           <span class="input-label">Medical ID</span>
-          <input type="text" ng-model="loginData.medical">
+          <input type="text" ng-model="createUser.medical_id" placeholder="Medical ID">
         </label>
         <label class="item item-input">
           <span class="input-label">Password</span>
-          <input type="text" ng-model="loginData.password">
+          <input type="text" ng-model="createUser.password" placeholder="Password">
+        </label>
+        <label class="item item-input">
+          <span class="input-label"> Confirm Password</span>
+          <input type="text" ng-model="createUser.confirm" placeholder="Confirm Password">
+        </label>
+        <div class="item item-input">
+          <div class="row">
+            <h4 class="col">Height</h4>
+          </div>
+          <div class="row">
+            <input type="text" class="col col-50"ng-model="createUser.height.feet" placeholder="Feet">
+            <input type="text" class="col col-50"ng-model="createUser.height.inches" placeholder="Inches">
+          </div>
+        </div>
+        <label class="item item-input">
+          <span class="input-label">Weight</span>
+          <input type="text" ng-model="createUser.weight" placeholder="LBS">
         </label>
       </div>
     </form>

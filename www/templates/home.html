@@ -4,7 +4,7 @@
   </ion-header-bar>
   <ion-content>
     <!-- if not logged in -->
-    <div ngHide="loginData" class="ng-hide">
+    <div ng-hide="loggedIn">
       <a class="button button-block button-stable" href="#/app/create">
         Create Account
       </a>
@@ -13,6 +13,11 @@
       </button>
     </div>
     <!-- if logged in -->
-
+    <div ng-show="loggedIn">
+      <p>You are currently logged in.</p>
+      <button class="button button-block button-positive" ng-click="logout()">
+        Logout
+      </button>
+    </div>
   </ion-content>
 </ion-view>

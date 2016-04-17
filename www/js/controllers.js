@@ -11,7 +11,9 @@ angular.module('starter.controllers', [])
 
   // Form data for the login modal
   $scope.loginData = {};
-  $scope.account = {};
+  $scope.createUser = {};
+  $scope.errors = {};
+  $scope.hasErrors = false;
   $scope.user = JSON.parse(window.localStorage.getItem('user'));
 
   // Create the login modal that we will use later
@@ -77,10 +79,54 @@ angular.module('starter.controllers', [])
     window.location.hash = "#/app/home"
   };
 
+  $scope.doCreate = function() {
+    var createUser = $scope.createUser;
+    delete createUser.confirm;
+
+    $http({
+      method: 'POST',
+      url: 'http://addictionresearch.herokuapp.com/users/',
+      data: {
+        "user": createUser
+      }
+    }).then( function successCallback(response) {
+      console.log('User created', response);
+      
+    }, function errorCallback(response) {
+      console.log('Create account error', response);
+      alert('An Error has Occured, Please Try again');
+    })
+  };
+
   $scope.doFacebook = function() {
     // TBD
     console.log('Login with Facebook');
   };
+  // ===========
+  // Validations
+  // ===========
+  $scope.checkErrors = function() {
+    var errors = [];
+    for (var prop in $scope.errors) {
+      if( $scope.errors.hasOwnProperty( prop ) ) {
+        errors.push($scope.errors[prop]);
+      }
+    }
+    $scope.hasErrors = errors.indexOf(true) > -1;
+  };
+  // passwords
+  $scope.checkPassword = function() {
+    $scope.errors.password = $scope.createUser.password !== $scope.createUser.confirm;
+    $scope.checkErrors();
+  };
+
+  // email
+  $scope.checkEmail = function() {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    $scope.errors.email = !re.test($scope.createUser.email);
+    $scope.checkErrors();
+  };
+
 })
 
 .controller('SplashCtrl', function($scope, $stateParams) {

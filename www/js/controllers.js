@@ -37,6 +37,7 @@ angular.module('starter.controllers', [])
     // code if using a login system
     $timeout(function() {
       $scope.closeLogin();
+      window.location.hash = '#/app/profile'
     }, 1000);
   };
 })

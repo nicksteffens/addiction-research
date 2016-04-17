@@ -3,11 +3,16 @@
     <h1 class="title">Addiction Research</h1>
   </ion-header-bar>
   <ion-content>
-    <a class="button button-full button-stable" href="#/app/create">
-      Create Account
-    </a>
-    <button class="button button-full button-calm" ng-click="login()">
-      Login
-    </button>
+    <!-- if not logged in -->
+    <div ngHide="loginData" class="ng-hide">
+      <a class="button button-block button-stable" href="#/app/create">
+        Create Account
+      </a>
+      <button class="button button-block button-positive" ng-click="login()">
+        Login
+      </button>
+    </div>
+    <!-- if logged in -->
+
   </ion-content>
 </ion-view>

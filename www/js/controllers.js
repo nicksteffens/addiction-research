@@ -22,7 +22,6 @@ angular.module('starter.controllers', [])
   }).then(function(modal) {
     $scope.loginModal = modal;
   });
-
   // Create the logout modal that we will use later
   $ionicModal.fromTemplateUrl('templates/logout.html', {
     scope: $scope

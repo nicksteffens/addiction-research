@@ -35,6 +35,12 @@ angular.module('starter.controllers', [])
   }).then(function(modal) {
     $scope.additionalInfoModal = modal;
   });
+  // Create the consent modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/consent.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.consentModal = modal;
+  });
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
     $scope.loginModal.hide();
@@ -53,6 +59,14 @@ angular.module('starter.controllers', [])
   // Close additional info
   $scope.closeAdditionalInfo = function() {
     $scope.additionalInfoModal.hide();
+  };
+  // Open additional info
+  $scope.additionalInfo = function() {
+    $scope.consentModal.show();
+  };
+  // Close additional info
+  $scope.closeAdditionalInfo = function() {
+    $scope.consentModal.hide();
   };
 
   $scope.logout = function() {

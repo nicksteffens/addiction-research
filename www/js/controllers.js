@@ -38,7 +38,7 @@ angular.module('starter.controllers', [])
   $ionicModal.fromTemplateUrl('templates/consent.html', {
     scope: $scope
   }).then(function(modal) {
-    $scope.consentModal = modal;
+    $scope.modal = modal;
   });
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
@@ -59,13 +59,13 @@ angular.module('starter.controllers', [])
   $scope.closeAdditionalInfo = function() {
     $scope.additionalInfoModal.hide();
   };
-  // Open additional info
+  // Open consent
   $scope.showConsent = function() {
-    $scope.consentModal.show();
+    $scope.modal.show();
   };
-  // Close additional info
+  // Close consent
   $scope.closeConsent = function() {
-    $scope.consentModal.hide();
+    $scope.modal.hide();
   };
 
   $scope.logout = function() {
@@ -146,6 +146,23 @@ angular.module('starter.controllers', [])
     $scope.errors.email = !re.test($scope.createUser.email);
     $scope.checkErrors();
   };
+
+  $scope.closeModal = function() {
+    $scope.modal.hide();
+  };
+
+  // Cleanup the modal when we're done with it!
+   $scope.$on('$destroy', function() {
+     $scope.modal.remove();
+   });
+   // Execute action on hide modal
+   $scope.$on('modal.hidden', function() {
+     // Execute action
+   });
+   // Execute action on remove modal
+   $scope.$on('modal.removed', function() {
+     // Execute action
+   });
 
 })
 

@@ -23,26 +23,36 @@ angular.module('starter.controllers', [])
     $scope.loginModal = modal;
   });
 
-  // Create the login modal that we will use later
+  // Create the logout modal that we will use later
   $ionicModal.fromTemplateUrl('templates/logout.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.logoutModal = modal;
   });
-
-
+  // Create the info modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/additional-info.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.additionalInfoModal = modal;
+  });
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
     $scope.loginModal.hide();
   };
-
   $scope.closeLogout = function() {
     $scope.logoutModal.hide();
-  }
-
+  };
   // Open the login modal
   $scope.login = function() {
     $scope.loginModal.show();
+  };
+  // Open additional info
+  $scope.additionalInfo = function() {
+    $scope.additionalInfoModal.show();
+  };
+  // Close additional info
+  $scope.closeAdditionalInfo = function() {
+    $scope.additionalInfoModal.hide();
   };
 
   $scope.logout = function() {
@@ -91,17 +101,14 @@ angular.module('starter.controllers', [])
       }
     }).then( function successCallback(response) {
       console.log('User created', response);
-      
+
     }, function errorCallback(response) {
       console.log('Create account error', response);
       alert('An Error has Occured, Please Try again');
     })
   };
 
-  $scope.doFacebook = function() {
-    // TBD
-    console.log('Login with Facebook');
-  };
+
   // ===========
   // Validations
   // ===========

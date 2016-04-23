@@ -1,5 +1,5 @@
 .platform-android .bar .title {
-  padding-left: 15px;
+  padding-left: 15px;  
 }
 
 .irk-centered-container {
@@ -217,9 +217,9 @@ button.irk-image:before {
 }
 
 .irk-countdown {
-  width: 150px;
-  height: 150px;
-  margin-left: auto;
+  width: 150px; 
+  height: 150px; 
+  margin-left: auto; 
   margin-right: auto;
 }
 
@@ -267,15 +267,15 @@ button.irk-image:before {
 }
 
 .irk-tap-container {
-  position: absolute;
-  bottom: 0px;
+  position: absolute; 
+  bottom: 0px; 
   width: 100%;
   height: 100%;
 }
 
 .irk-tap-button-container {
-  position: absolute;
-  bottom: 30px;
+  position: absolute; 
+  bottom: 30px; 
   width: 100%;
 }
 

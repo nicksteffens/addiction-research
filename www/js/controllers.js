@@ -61,11 +61,11 @@ angular.module('starter.controllers', [])
     $scope.additionalInfoModal.hide();
   };
   // Open additional info
-  $scope.additionalInfo = function() {
+  $scope.showConsent = function() {
     $scope.consentModal.show();
   };
   // Close additional info
-  $scope.closeAdditionalInfo = function() {
+  $scope.closeConsent = function() {
     $scope.consentModal.hide();
   };
 

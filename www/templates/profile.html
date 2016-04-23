@@ -8,7 +8,16 @@
         <h3>Welcome {{user.first_name}} {{user.last_name}}</h3>
       </div>
     </div>
-
+    <!-- consent -->
+    <div class="row">
+      <div class="col">
+        <p>Before we get started we need your consent</p>
+        <button class="button button-block button-positive" ng-click="showConsent()">
+          Consent Agreement
+        </button>
+      </div>
+    </div>
+    <!-- additional Info -->
     <div class="row">
       <div class="col">
         <p>We need some more information from you. Please click the following fill out the additional information:</p>
@@ -16,7 +25,6 @@
         <button class="button button-block button-positive" ng-click="additionalInfo()">
           Additional Info
         </button>
-
       </div>
     </div>
   </ion-content>

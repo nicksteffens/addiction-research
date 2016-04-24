@@ -88,6 +88,22 @@ module.exports = [
         "clobbers": [
             "navigator.geolocation"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-dialogs/www/notification.js",
+        "id": "cordova-plugin-dialogs.notification",
+        "pluginId": "cordova-plugin-dialogs",
+        "merges": [
+            "navigator.notification"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-background-geolocation-zencity/www/BackgroundGeoLocation.js",
+        "id": "cordova-plugin-background-geolocation-zencity.BackgroundGeoLocation",
+        "pluginId": "cordova-plugin-background-geolocation-zencity",
+        "clobbers": [
+            "plugins.backgroundGeoLocation"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -101,7 +117,9 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.2.1",
     "ionic-plugin-keyboard": "2.0.1",
     "cordova-plugin-compat": "1.0.0",
-    "cordova-plugin-geolocation": "2.2.0"
+    "cordova-plugin-geolocation": "2.2.0",
+    "cordova-plugin-dialogs": "1.2.1",
+    "cordova-plugin-background-geolocation-zencity": "1.0.5"
 }
 // BOTTOM OF METADATA
 });

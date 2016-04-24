@@ -34,3 +34,11 @@ Notes with Muhammed
   * Once a day / week? If possible daily?
   * Notification for every day
   * Checkout MyHeart Counts
+
+
+Nick's Short listen
+---
+- [ ] GPS
+- [ ] Notifications on the daily to take survey
+- [ ] Questions and how to get them... _sync with shakir_
+  * In the mean time have it locally.

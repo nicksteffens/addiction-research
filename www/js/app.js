@@ -17,10 +17,10 @@ angular.module('starter', ['ngCordova', 'ionic', 'ionicResearchKit', 'starter.co
       // healthkit
       cordova.plugins.healthkit.isAvailable().then(function(yes) {
         // Is available
-        console.log('healthkit Is available');
+        required.healthkit = true;
       }, function(no) {
         // Is not available
-        console.log('healthkit Is not available');
+        required.healthkit = false;
       });
     }
     if (window.StatusBar) {

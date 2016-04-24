@@ -43,6 +43,14 @@
                         {
                             "xml": "<feature name=\"Geolocation\"><param name=\"ios-package\" value=\"CDVLocation\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"BackgroundGeoLocation\"><param name=\"ios-package\" value=\"CDVBackgroundGeoLocation\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -52,6 +60,18 @@
                     "NSLocationWhenInUseUsageDescription": [
                         {
                             "xml": "<string />",
+                            "count": 1
+                        }
+                    ],
+                    "NSLocationAlwaysUsageDescription": [
+                        {
+                            "xml": "<string>This app requires background location tracking</string>",
+                            "count": 1
+                        }
+                    ],
+                    "UIBackgroundModes": [
+                        {
+                            "xml": "<array><string>location</string></array>",
                             "count": 1
                         }
                     ]
@@ -85,6 +105,12 @@
             "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
         },
         "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
+        },
+        "cordova-plugin-background-geolocation-zencity": {
             "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
         }
     },
@@ -178,6 +204,22 @@
             "clobbers": [
                 "navigator.geolocation"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-dialogs/www/notification.js",
+            "id": "cordova-plugin-dialogs.notification",
+            "pluginId": "cordova-plugin-dialogs",
+            "merges": [
+                "navigator.notification"
+            ]
+        },
+        {
+            "file": "plugins/cordova-plugin-background-geolocation-zencity/www/BackgroundGeoLocation.js",
+            "id": "cordova-plugin-background-geolocation-zencity.BackgroundGeoLocation",
+            "pluginId": "cordova-plugin-background-geolocation-zencity",
+            "clobbers": [
+                "plugins.backgroundGeoLocation"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -189,6 +231,8 @@
         "cordova-plugin-whitelist": "1.2.1",
         "ionic-plugin-keyboard": "2.0.1",
         "cordova-plugin-compat": "1.0.0",
-        "cordova-plugin-geolocation": "2.2.0"
+        "cordova-plugin-geolocation": "2.2.0",
+        "cordova-plugin-dialogs": "1.2.1",
+        "cordova-plugin-background-geolocation-zencity": "1.0.5"
     }
 }

@@ -15,6 +15,7 @@ angular.module('starter.controllers', [])
   $scope.errors = {};
   $scope.hasErrors = false;
   $scope.user = JSON.parse(window.localStorage.getItem('user'));
+  $scope.required = {};
 
   // ======
   // Modals

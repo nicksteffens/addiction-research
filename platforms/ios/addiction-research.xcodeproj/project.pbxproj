@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		138AAB72DC9A465CAFCBCE25 /* CDVLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = FD6CE6669067461E99A8E740 /* CDVLocation.m */; };
 		1D3623260D0F684500981E51 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AppDelegate.m */; };
@@ -52,6 +51,11 @@
 		B8976DDF7BDD437F9D38D102 /* IonicKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 8119BF70B04A4898A530D4F5 /* IonicKeyboard.m */; };
 		D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */; };
 		EF54312D17A04A96AEA502C3 /* CDVDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEA1B37460046E08ED78175 /* CDVDevice.m */; };
+		B82BC33A49AF4A7DAA380468 /* CDVNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 4188F7BB174F45EA936EE675 /* CDVNotification.m */; };
+		C0251CC8519148B28F20D4F5 /* CDVNotification.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C3AB8C65F9B54012AE3E0DD6 /* CDVNotification.bundle */; };
+		53EE0BEDE16E4AFA8A82AE11 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABD0FE4BE3B459CA99648C8 /* AudioToolbox.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		EAFAF94DF554462EA84C99A2 /* CDVBackgroundGeoLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 190F267B6CD449BBBA6BF2BF /* CDVBackgroundGeoLocation.m */; };
+		FD4F2416E5B04403BC33316C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A479D7E740B3458587F299C5 /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,6 +142,13 @@
 		F3B91E3F6CEB456FA2DB8B86 /* CDVViewController+SplashScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDVViewController+SplashScreen.h"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.h"; sourceTree = "<group>"; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = "addiction-research/config.xml"; sourceTree = "<group>"; };
 		FD6CE6669067461E99A8E740 /* CDVLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDVLocation.m; path = "cordova-plugin-geolocation/CDVLocation.m"; sourceTree = "<group>"; };
+		4188F7BB174F45EA936EE675 /* CDVNotification.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVNotification.m"; path = "cordova-plugin-dialogs/CDVNotification.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		BBE65F948571403A99226020 /* CDVNotification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVNotification.h"; path = "cordova-plugin-dialogs/CDVNotification.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		C3AB8C65F9B54012AE3E0DD6 /* CDVNotification.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = "CDVNotification.bundle"; path = "CDVNotification.bundle"; sourceTree = "<group>"; };
+		2ABD0FE4BE3B459CA99648C8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "AudioToolbox.framework"; path = "System/Library/Frameworks/AudioToolbox.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		190F267B6CD449BBBA6BF2BF /* CDVBackgroundGeoLocation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVBackgroundGeoLocation.m"; path = "cordova-plugin-background-geolocation-zencity/CDVBackgroundGeoLocation.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		EA032465E9934A9791C8FDD3 /* CDVBackgroundGeoLocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVBackgroundGeoLocation.h"; path = "cordova-plugin-background-geolocation-zencity/CDVBackgroundGeoLocation.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		A479D7E740B3458587F299C5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "AVFoundation.framework"; path = "System/Library/Frameworks/AVFoundation.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +162,8 @@
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
 				305D5FD1115AB8F900A74A75 /* MobileCoreServices.framework in Frameworks */,
 				AEB290A4573F4D6EBE081E8B /* CoreLocation.framework in Frameworks */,
+				53EE0BEDE16E4AFA8A82AE11 /* AudioToolbox.framework in Frameworks */,
+				FD4F2416E5B04403BC33316C /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,6 +226,7 @@
 				308D052D1370CCF300D202BF /* icons */,
 				308D05311370CCF300D202BF /* splash */,
 				8D1107310486CEB800E47090 /* addiction-research-Info.plist */,
+				C3AB8C65F9B54012AE3E0DD6 /* CDVNotification.bundle */,
 			);
 			name = Resources;
 			path = "addiction-research/Resources";
@@ -226,6 +240,8 @@
 				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
 				305D5FD0115AB8F900A74A75 /* MobileCoreServices.framework */,
 				4B61C86B148F465784B31E74 /* CoreLocation.framework */,
+				2ABD0FE4BE3B459CA99648C8 /* AudioToolbox.framework */,
+				A479D7E740B3458587F299C5 /* AVFoundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -261,6 +277,10 @@
 				4D4534148B844A4CA1C00B7E /* IonicKeyboard.h */,
 				FD6CE6669067461E99A8E740 /* CDVLocation.m */,
 				34FCA9A4BE7E47CF94333298 /* CDVLocation.h */,
+				4188F7BB174F45EA936EE675 /* CDVNotification.m */,
+				BBE65F948571403A99226020 /* CDVNotification.h */,
+				190F267B6CD449BBBA6BF2BF /* CDVBackgroundGeoLocation.m */,
+				EA032465E9934A9791C8FDD3 /* CDVBackgroundGeoLocation.h */,
 			);
 			name = Plugins;
 			path = "addiction-research/Plugins";
@@ -342,7 +362,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 700;
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
 						DevelopmentTeam = J348398H6Z;
@@ -427,6 +447,7 @@
 				7E7966E11810823500FA85AD /* icon-50@2x.png in Resources */,
 				7E7966E51810823500FA85AD /* icon-76@2x.png in Resources */,
 				30FC414916E50CA1004E6F35 /* icon-72@2x.png in Resources */,
+				C0251CC8519148B28F20D4F5 /* CDVNotification.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,6 +489,8 @@
 				46D442CA530A4A56BD28577B /* CDVStatusBar.m in Sources */,
 				B8976DDF7BDD437F9D38D102 /* IonicKeyboard.m in Sources */,
 				138AAB72DC9A465CAFCBCE25 /* CDVLocation.m in Sources */,
+				B82BC33A49AF4A7DAA380468 /* CDVNotification.m in Sources */,
+				EAFAF94DF554462EA84C99A2 /* CDVBackgroundGeoLocation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

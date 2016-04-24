@@ -18,6 +18,14 @@
       <button class="button button-block button-positive" ng-click="openModal('logout')">
         Logout
       </button>
+
+      <ion-list>
+
+        <ion-checkbox ng-model="required.geolocation">Geolocation</ion-checkbox>
+        <ion-checkbox ng-model="required.healthkit">HealthKit</ion-checkbox>
+
+      </ion-list>
     </div>
+
   </ion-content>
 </ion-view>

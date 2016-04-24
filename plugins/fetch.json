@@ -70,5 +70,21 @@
         },
         "is_top_level": false,
         "variables": {}
+    },
+    "cordova-plugin-background-geolocation-zencity": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-background-geolocation@1.0.5"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-dialogs": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-dialogs"
+        },
+        "is_top_level": false,
+        "variables": {}
     }
 }

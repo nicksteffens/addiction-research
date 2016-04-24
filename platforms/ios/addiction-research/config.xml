@@ -26,6 +26,12 @@
     <feature name="Geolocation">
         <param name="ios-package" value="CDVLocation" />
     </feature>
+    <feature name="Notification">
+        <param name="ios-package" value="CDVNotification" />
+    </feature>
+    <feature name="BackgroundGeoLocation">
+        <param name="ios-package" value="CDVBackgroundGeoLocation" />
+    </feature>
     <name>addiction-research</name>
     <description>
         An Ionic Framework and Cordova project.

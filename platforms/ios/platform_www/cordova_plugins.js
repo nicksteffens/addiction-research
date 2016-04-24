@@ -104,6 +104,14 @@ module.exports = [
         "clobbers": [
             "plugins.backgroundGeoLocation"
         ]
+    },
+    {
+        "file": "plugins/com.transistorsoft.cordova.background-geolocation/www/BackgroundGeolocation.js",
+        "id": "com.transistorsoft.cordova.background-geolocation.BackgroundGeolocation",
+        "pluginId": "com.transistorsoft.cordova.background-geolocation",
+        "clobbers": [
+            "window.BackgroundGeolocation"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -119,7 +127,8 @@ module.exports.metadata =
     "cordova-plugin-compat": "1.0.0",
     "cordova-plugin-geolocation": "2.2.0",
     "cordova-plugin-dialogs": "1.2.1",
-    "cordova-plugin-background-geolocation-zencity": "1.0.5"
+    "cordova-plugin-background-geolocation-zencity": "1.0.5",
+    "com.transistorsoft.cordova.background-geolocation": "1.5.1"
 }
 // BOTTOM OF METADATA
 });

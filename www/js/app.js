@@ -17,10 +17,10 @@ angular.module('starter', ['ngCordova', 'ionic', 'ionicResearchKit', 'starter.co
       // healthkit
       cordova.plugins.healthkit.isAvailable().then(function(yes) {
         // Is available
-        required.healthkit = true;
+        window.required.healthkit = true;
       }, function(no) {
         // Is not available
-        required.healthkit = false;
+        window.required.healthkit = false;
       });
     }
     if (window.StatusBar) {
@@ -28,6 +28,9 @@ angular.module('starter', ['ngCordova', 'ionic', 'ionicResearchKit', 'starter.co
       StatusBar.styleDefault();
     }
 
+
+    // geolocation testing
+    console.log('cordova plugins %o', cordova.plugins);
   });
 })
 

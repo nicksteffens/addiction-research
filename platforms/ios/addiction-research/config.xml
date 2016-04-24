@@ -32,6 +32,9 @@
     <feature name="BackgroundGeoLocation">
         <param name="ios-package" value="CDVBackgroundGeoLocation" />
     </feature>
+    <feature name="BackgroundGeolocation">
+        <param name="ios-package" value="CDVBackgroundGeolocation" />
+    </feature>
     <name>addiction-research</name>
     <description>
         An Ionic Framework and Cordova project.
@@ -42,6 +45,8 @@
     <content src="index.html" />
     <access origin="*" />
     <preference name="AllowInlineMediaPlayback" value="false" />
+    <preference name="BackupWebStorage" value="none" />
+    <preference name="DisallowOverscroll" value="true" />
     <preference name="EnableViewportScale" value="false" />
     <preference name="KeyboardDisplayRequiresUserAction" value="true" />
     <preference name="MediaPlaybackRequiresUserAction" value="false" />
@@ -54,7 +59,5 @@
     <preference name="StatusBarStyle" value="lightcontent" />
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />
-    <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="16" />
-    <preference name="BackupWebStorage" value="none" />
 </widget>

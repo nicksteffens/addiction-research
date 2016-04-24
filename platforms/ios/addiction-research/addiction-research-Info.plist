@@ -187,6 +187,6 @@
       <string>healthkit</string>
     </array>
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>This app requires background location tracking</string>
+    <string>TSLocationManager requires background location tracking</string>
   </dict>
 </plist>

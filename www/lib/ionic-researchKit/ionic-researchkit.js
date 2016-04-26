@@ -367,7 +367,7 @@ angular.module('ionicResearchKit',[])
 
                         if (consentImageClass != '') {
                             var image = angular.element(document.querySelectorAll('.irk-slider-slide')[index].querySelector('.irk-step-image'));
-                            image.css('background-image', 'url(lib/ionic-researchkit/resources/'+consentImageClass+'?x='+Math.random()+')');
+                            image.css('background-image', 'url(lib/ionic-researchkit/resources/'+consentImageClass+'?x='+Math.attr.idm()+')');
                         }
                     }
 
@@ -655,8 +655,7 @@ angular.module('ionicResearchKit',[])
     return {
         restrict: 'E',
         template: function(elem, attr) {
-            var rando = 'q' + Math.floor(Math.random() * (100 - 1)) + 1;
-            return 	'<form name="form.'+rando+'" class="irk-slider" novalidate>'+
+            return 	'<form name="form.'+attr.id+'" class="irk-slider" novalidate>'+
                     '<div class="irk-centered">'+
                     '<div class="irk-text-centered">'+
                     '<h3>'+attr.title+'</h3>'+
@@ -664,11 +663,11 @@ angular.module('ionicResearchKit',[])
                     '</div>'+
                     '</div>'+
                     '<div class="irk-spacer"></div>'+
-                    '<h3>{{$parent.formData.'+rando+' || \'&nbsp;\'}}</h3>'+
+                    '<h3>{{$parent.formData.'+attr.id+' || \'&nbsp;\'}}</h3>'+
                     '<div class="range">'+
                     attr.min+
                     (attr.minText?'<br>'+attr.minText:'')+
-                    '<input type="range" name="'+rando+'" min="'+attr.min+'" max="'+attr.max+'" step="'+attr.step+'" value="'+attr.value+'" ng-model="$parent.formData.'+rando+'" ng-required="'+(attr.optional=='false'?'true':'false')+'" ng-change="$parent.dirty()">'+
+                    '<input type="range" name="'+attr.id+'" min="'+attr.min+'" max="'+attr.max+'" step="'+attr.step+'" value="'+attr.value+'" ng-model="$parent.formData.'+attr.id+'" ng-required="'+(attr.optional=='false'?'true':'false')+'" ng-change="$parent.dirty()">'+
                     attr.max+
                     (attr.maxText?'<br>'+attr.maxText:'')+
                     '</div>'+

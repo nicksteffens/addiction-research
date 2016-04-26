@@ -174,27 +174,18 @@ angular.module('starter.controllers', [])
 // ============
 // Survey Stuff
 // ============
-.controller('SurveyCtrl', function(config, $scope, $ionicModal, $http) {
-  $scope.data = {};
-  $scope.questions = [];
+.controller('SurveyCtrl', ['config', '$scope', '$ionicModal', '$http', 'irkResults', function(config, $scope, $ionicModal, $http, irkResults) {
   $scope.takingSurvey = false;
   $scope.surveyError = false;
 
   $scope.openModal = function() {
-    $ionicModal.fromTemplateUrl('templates/survey-modal.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal = modal;
-      $scope.takingSurvey = true;
-      $scope.surveyError = false;
-      getQuestions();
-    });
+    $scope.takingSurvey = true;
+    getQuestions();
   };
 
   $scope.closeModal = function() {
     $scope.takingSurvey = false;
-    $scope.questions = [];
+    console.log('get results', irkResults.getResults());
     $scope.modal.remove();
   };
 
@@ -212,19 +203,45 @@ angular.module('starter.controllers', [])
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
       // when the response is available
-      $scope.questions = response.data.questions;
       console.log('Retrieved Questions', $scope.questions);
+      $scope.modal = $ionicModal.fromTemplate(renderSurvey(response.data.questions), {
+        scope: $scope,
+        animation: 'slide-in-up'
+      });
       $scope.modal.show();
     }, function errorCallback(response) {
       // called asynchronously if an error occurs
       // or server returns response with an error status.
       $scope.takingSurvey = false;
       $scope.surveyError = true;
-      $scope.modal.remove();
       console.log('questions error', response);
     });
   }
 
-})
+  function renderSurvey(questions) {
+    return '<ion-modal-view class="irk-modal">'+
+      '<irk-ordered-tasks>'+
+          renderQuestions(questions)+
+      '</irk-ordered-tasks>'+
+    '</ion-modal-view>';
+  }
+
+  function renderQuestions(questions) {
+    var questionsArray = [];
+    for(i = 0; i < questions.length; i++ ) {
+      var questionType = questions[i].q_type;
+
+      switch (questionType) {
+        case 'boolean':
+          questionsArray.push('<irk-task><irk-boolean-question-step id="q'+questions[i].id+'" title="'+questions[i].question+'" text="Additional text can go here." true-text="Yes" false-text="No" /></irk-task>');
+          break;
+        case 'scale':
+          questionsArray.push('<irk-task><irk-scale-question-step id="q'+questions[i].id+'" title="'+questions[i].question+'" text="1 being Never &amp; 5 Almost Always" min="1" max="5" step="1" value="3" /></irk-task>');
+          break;
+      }
+    }
+    return questionsArray.join('\n');
+  }
+}])
 .controller('SplashCtrl', function($scope, $stateParams) {
 });

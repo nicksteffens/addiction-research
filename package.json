@@ -24,7 +24,11 @@
     "ionic-plugin-keyboard",
     "cordova-plugin-background-geolocation@1.0.5",
     "cordova-background-geolocation-lt",
-    "cordova-plugin-geolocation"
+    "cordova-plugin-geolocation",
+    {
+      "locator": "https://github.com/transistorsoft/cordova-background-geolocation-lt.git",
+      "id": "com.transistorsoft.cordova.background-geolocation"
+    }
   ],
   "cordovaPlatforms": [
     "ios"

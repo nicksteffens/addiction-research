@@ -7,21 +7,24 @@
 angular.module('starter', ['ngCordova', 'ionic', 'ionicResearchKit', 'starter.controllers'])
 
 .run(function($ionicPlatform) {
-
+  var bgGeo;
+  
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+      // cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
       // healthkit
-      cordova.plugins.healthkit.isAvailable().then(function(yes) {
-        // Is available
-        window.required.healthkit = true;
-      }, function(no) {
-        // Is not available
-        window.required.healthkit = false;
-      });
+      // cordova.plugins.healthkit.isAvailable().then(function(yes) {
+      //   // Is available
+      //   console.log('healthkit available');
+      //   // window.required.healthkit = true;
+      // }, function(no) {
+      //   // Is not available
+      //   console.log('healthkit not available');
+      //   // window.required.healthkit = false;
+      // });
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
@@ -29,8 +32,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'ionicResearchKit', 'starter.co
     }
 
 
-    // geolocation testing
-    console.log('cordova plugins %o', cordova.plugins);
+
   });
 })
 

@@ -15,7 +15,8 @@ angular.module('starter.controllers', [])
   $scope.errors = {};
   $scope.hasErrors = false;
   $scope.user = JSON.parse(window.localStorage.getItem('user'));
-  $scope.required = window.required;
+  // $scope.required = window.required;
+  $scope.geolocation = {};
 
   // ======
   // Modals
@@ -123,6 +124,41 @@ angular.module('starter.controllers', [])
     $scope.errors.email = !re.test($scope.createUser.email);
     $scope.checkErrors();
   };
+  // ==================
+  // End of Validations
+  // ==================
+
+  // ===========
+  // Geolocation
+  // ===========
+  var posOptions = {timeout: 3000, enableHighAccuracy: false};
+  var watchDelay = 5000;
+  var bgGeolocationWatch = window.setInterval(function() {
+    $cordovaGeolocation
+     .getCurrentPosition(posOptions)
+
+     .then(function (position) {
+        updateGeolocation(position);
+     }, function(err) {
+        console.log('get error ' + err.message + '\ncode: ' + err.code);
+     });
+  }, watchDelay);
+
+
+  function updateGeolocation(position) {
+    $scope.geolocation.lat  = position.coords.latitude;
+    $scope.geolocation.long = position.coords.longitude;
+    $scope.geolocation.timestamp = position.timestamp;
+    console.log('update geolocation '
+      + $scope.geolocation.lat + '   '
+      + $scope.geolocation.long + '\nat: '
+      + $scope.geolocation.timestamp
+    );
+  }
+
+  // ==================
+  // End of Geolocation
+  // ==================
 })
 
 .controller('SplashCtrl', function($scope, $stateParams) {

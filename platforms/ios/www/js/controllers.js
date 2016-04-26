@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $cordovaHealthKit, $cordovaGeolocation, $timeout, $http) {
+.controller('AppCtrl', function($scope, $ionicModal, $cordovaHealthKit, $cordovaGeolocation, $cordovaBackgroundGeolocationm, $timeout, $http) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -15,7 +15,8 @@ angular.module('starter.controllers', [])
   $scope.errors = {};
   $scope.hasErrors = false;
   $scope.user = JSON.parse(window.localStorage.getItem('user'));
-  $scope.required = window.required;
+  // $scope.required = window.required;
+  $scope.geolocation = {};
 
   // ======
   // Modals
@@ -123,6 +124,69 @@ angular.module('starter.controllers', [])
     $scope.errors.email = !re.test($scope.createUser.email);
     $scope.checkErrors();
   };
+  // ==================
+  // End of Validations
+  // ==================
+
+  // ===========
+  // Geolocation
+  // ===========
+  var posOptions = {timeout: 3000, enableHighAccuracy: false};
+  $cordovaGeolocation
+   .getCurrentPosition(posOptions)
+
+   .then(function (position) {
+      $scope.geolocation.lat  = position.coords.latitude;
+      $scope.geolocation.long = position.coords.longitude;
+      $scope.geolocation.updatedAt = new Date();
+      console.log('get geolocation ' + $scope.geolocation.lat + '   ' + $scope.geolocation.long)
+   }, function(err) {
+      console.log(err)
+   });
+  var watchOptions = {timeout : 3000, enableHighAccuracy: false};
+  var watch = $cordovaGeolocation.watchPosition(watchOptions);
+
+  watch.then(
+    null,
+
+    function(err) {
+       console.log(err)
+    },
+
+    function(position) {
+       $scope.geolocation.lat  = position.coords.latitude;
+       $scope.geolocation.long = position.coords.longitude;
+       $scope.geolocation.updatedAt = new Date();
+       console.log('Watch geolocation ' + $scope.geolocation.lat + '   ' + $scope.geolocation.long + '\nUpdated At: ' + $scope.geolocation.updatedAt);
+    }
+    );
+
+  watch.clearWatch();
+  // ==================
+  // End of Geolocation
+  // ==================
+
+  // ==============
+  // BgGeolocation
+  // ==============
+  // `configure` calls `start` internally
+    $cordovaBackgroundGeolocation.configure(options)
+    .then(
+      null, // Background never resolves
+      function (err) { // error callback
+        console.error(err);
+      },
+      function (location) { // notify callback
+        console.log(location);
+      });
+
+
+    $scope.stopBackgroundGeolocation = function () {
+      $cordovaBackgroundGeolocation.stop();
+    };
+  // ====================
+  // End of BgGeolocation
+  // ====================
 })
 
 .controller('SplashCtrl', function($scope, $stateParams) {

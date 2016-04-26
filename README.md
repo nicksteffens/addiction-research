@@ -38,7 +38,8 @@ Notes with Muhammed
 
 Nick's Short listen
 ---
-- [ ] GPS
+- [x] GPS
 - [ ] Notifications on the daily to take survey
 - [ ] Questions and how to get them... _sync with shakir_
   * In the mean time have it locally.
+- [ ] Login should now use Healthkit functions for height and weight 

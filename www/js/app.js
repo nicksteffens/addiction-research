@@ -4,11 +4,11 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ngCordova', 'ionic', 'ionicResearchKit', 'starter.controllers'])
+angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', 'checklist-model', 'angular-dialgauge', 'ngCordova'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $cordovaHealthKit, $ionicModal) {
   var bgGeo;
-  
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -16,22 +16,18 @@ angular.module('starter', ['ngCordova', 'ionic', 'ionicResearchKit', 'starter.co
       // cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
       // healthkit
-      // cordova.plugins.healthkit.isAvailable().then(function(yes) {
-      //   // Is available
-      //   console.log('healthkit available');
-      //   // window.required.healthkit = true;
-      // }, function(no) {
-      //   // Is not available
-      //   console.log('healthkit not available');
-      //   // window.required.healthkit = false;
-      // });
+      $cordovaHealthKit.isAvailable().then(function(yes) {
+        // Is available
+        console.log('healthkit is a available');
+      }, function(no) {
+        // Is not available
+        console.log('healthkit not available');
+      });
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-
-
 
   });
 })
@@ -72,6 +68,23 @@ angular.module('starter', ['ngCordova', 'ionic', 'ionicResearchKit', 'starter.co
     views: {
       'menuContent': {
         templateUrl: 'templates/profile.html'
+      }
+    }
+  })
+  .state('app.survey', {
+    url: '/survey',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/survey.html',
+        controller: 'SurveyCtrl'
+      }
+    }
+  })
+  .state('app.debug', {
+    url: '/debug',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/debug.html'
       }
     }
   });

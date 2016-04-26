@@ -1,0 +1,23 @@
+<ion-view view-title="Survey">
+  <ion-header-bar>
+    <h1 class="title">Addiction Research</h1>
+  </ion-header-bar>
+  <ion-content class="padding">
+    <div class="start-survey" ng-hide="takingSurvey">
+      <p>Please take the time to fill out the following survey:</p>
+
+      <button class="button button-block button-calm" ng-click="openModal()" ng-hide="takingSurvey">
+        Take Survey
+      </button>
+      <!-- error state -->
+      <p ng-show="surveyError" class="assertive">There was a problem retrieving your survey, Please try again</p>
+    </div>
+
+    <div class="row" ng-show="takingSurvey">
+      <div class="col-33 col-offset-33 padding">
+        <ion-spinner class="spinner"></ion-spinner>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>

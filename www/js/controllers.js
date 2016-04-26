@@ -1,21 +1,27 @@
 angular.module('starter.controllers', [])
+.factory('config', [function() {
+   var config = {
+     geolocation: {
+       disable: true, // for debugging only
+       timeout: 5000 // in milliseconds
+     },
+     api: {
+       answers: 'http://addictionresearch.herokuapp.com/answers',
+       login: 'http://addictionresearch.herokuapp.com/sessions',
+       questions: 'http://addictionresearch.herokuapp.com/questions',
+       users: 'http://addictionresearch.herokuapp.com/users/'
+     }
+   };
+   return config;
+ }])
+.controller('AppCtrl', function(config, $scope, $ionicModal, $cordovaGeolocation, $timeout, $cordovaHealthKit, $http) {
 
-.controller('AppCtrl', function($scope, $ionicModal, $cordovaHealthKit, $cordovaGeolocation, $timeout, $http) {
-
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-
-  // Form data for the login modal
+  // constant vars
   $scope.loginData = {};
   $scope.createUser = {};
   $scope.errors = {};
   $scope.hasErrors = false;
   $scope.user = JSON.parse(window.localStorage.getItem('user'));
-  // $scope.required = window.required;
   $scope.geolocation = {};
 
   // ======
@@ -55,7 +61,7 @@ angular.module('starter.controllers', [])
   $scope.doLogin = function() {
     $http({
       method: 'POST',
-      url: 'http://addictionresearch.herokuapp.com/sessions',
+      url: config.api.login,
       data: {
         "session": {
             "email": $scope.loginData.email,
@@ -77,7 +83,7 @@ angular.module('starter.controllers', [])
   $scope.doLogout = function () {
     window.localStorage.removeItem('user');
     $scope.user = {};
-    $scope.closeLogout();
+    $scope.closeModal('logout');
     window.location.hash = "#/app/home"
   };
 
@@ -87,7 +93,7 @@ angular.module('starter.controllers', [])
 
     $http({
       method: 'POST',
-      url: 'http://addictionresearch.herokuapp.com/users/',
+      url: config.api.users,
       data: {
         "user": createUser
       }
@@ -131,18 +137,23 @@ angular.module('starter.controllers', [])
   // ===========
   // Geolocation
   // ===========
-  var posOptions = {timeout: 3000, enableHighAccuracy: false};
+  var posOptions = { timeout: 3000, enableHighAccuracy: false };
   var watchDelay = 5000;
-  var bgGeolocationWatch = window.setInterval(function() {
-    $cordovaGeolocation
-     .getCurrentPosition(posOptions)
 
-     .then(function (position) {
-        updateGeolocation(position);
-     }, function(err) {
-        console.log('get error ' + err.message + '\ncode: ' + err.code);
-     });
-  }, watchDelay);
+  if ( $scope.user && config.geolocation.on) {
+    var bgGeolocationWatch = window.setInterval(function() {
+      $cordovaGeolocation
+       .getCurrentPosition(posOptions)
+
+       .then(function (position) {
+            updateGeolocation(position);
+
+       }, function(err) {
+          console.log('get error ' + err.message + '\ncode: ' + err.code);
+       });
+    }, watchDelay);
+  }
+
 
 
   function updateGeolocation(position) {
@@ -160,6 +171,60 @@ angular.module('starter.controllers', [])
   // End of Geolocation
   // ==================
 })
+// ============
+// Survey Stuff
+// ============
+.controller('SurveyCtrl', function(config, $scope, $ionicModal, $http) {
+  $scope.data = {};
+  $scope.questions = [];
+  $scope.takingSurvey = false;
+  $scope.surveyError = false;
 
+  $scope.openModal = function() {
+    $ionicModal.fromTemplateUrl('templates/survey-modal.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+      $scope.takingSurvey = true;
+      $scope.surveyError = false;
+      getQuestions();
+    });
+  };
+
+  $scope.closeModal = function() {
+    $scope.takingSurvey = false;
+    $scope.questions = [];
+    $scope.modal.remove();
+  };
+
+  // Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function() {
+    console.log("survey results", $scope.data);
+    $scope.modal.remove();
+  });
+
+  // get the questions
+  function getQuestions() {
+    $http({
+      method: 'GET',
+      url: config.api.questions
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      $scope.questions = response.data.questions;
+      console.log('Retrieved Questions', $scope.questions);
+      $scope.modal.show();
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      $scope.takingSurvey = false;
+      $scope.surveyError = true;
+      $scope.modal.remove();
+      console.log('questions error', response);
+    });
+  }
+
+})
 .controller('SplashCtrl', function($scope, $stateParams) {
 });

@@ -33,10 +33,7 @@ Current List of ToDo's:
   * Weight
   * Medical ID?
   * POST / PATCH this info _shakir_
-- [ ] Survey Questions
-  * GET questions
-  * Questions Controller / Template
-  * POST answers _shakir_
+- [x] Survey Questions
 - [ ] Goals
   * Goal Creation Page
   * POST / GET _shakir_
@@ -45,19 +42,6 @@ Current List of ToDo's:
   * GPS Tracking / Background tracking
   * POST _shakir_
 - [ ] Notifications!!! _need help looking into_ _kevin?_
-
-
-Notes with Muhammed
----
-- No Facebook
-- GPS must background tracking
-- Text / Phone call is out
-- Read through anonymous user identifier
-- Survey Questions
-  * Once a day / week? If possible daily?
-  * Notification for every day
-  * Checkout MyHeart Counts
-
 
 Nick's Short listen
 ---

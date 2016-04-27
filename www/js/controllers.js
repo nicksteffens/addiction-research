@@ -41,6 +41,7 @@ angular.module('starter.controllers', [])
   $scope.eligible = JSON.parse(window.localStorage.getItem('eligible'));
   $scope.consent = JSON.parse(window.localStorage.getItem('consent'));
 
+
   $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
     // regrab locals
     if (toState.url === '/home') {
@@ -226,7 +227,7 @@ angular.module('starter.controllers', [])
     $scope.takingSurvey = false;
     var surveyResults = irkResults.getResults();
     // did they complete the survey
-    if (surveyResults.childResults.length > 0) {
+    if (surveyResults.childResults.length > 0 && !surveyResults.canceled) {
       postAnswers(surveyResults)
     }
     $scope.modal.remove();

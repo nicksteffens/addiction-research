@@ -71,7 +71,7 @@ angular.module('starter.controllers', [])
               if (!isPresent) {
                 scheduleNotification();
               } else {
-
+                listenForNotificationClick();
               }
             }
           });
@@ -95,6 +95,13 @@ angular.module('starter.controllers', [])
         $cordovaLocalNotification.registerPermission().then(function(registeredPermission) {
           console.log('registeredPermission');
         });
+      }
+
+      // listen for action
+      function listenForNotificationClick() {
+        $rootScope.$on('$cordovaLocalNotification:click', function(event, notification, state) {
+          console.log('clicked');
+        })
       }
     }
   });

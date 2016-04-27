@@ -4,7 +4,7 @@ An iOS phone app for helping researchers survey / monitor addicts
 
 Configuration:
 ---
-Inside of [controllers.js](https://github.com/nicksteffens/addiction-research/blob/master/www/js/controllers.js) there is a `config factory` with configuration data
+Inside of [controllers.js](/www/js/controllers.js) there is a `config factory` with configuration data
 
 Here Are options:
 - geolocation

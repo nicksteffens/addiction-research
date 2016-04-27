@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-var BeneAdd = angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', 'checklist-model', 'angular-dialgauge', 'ngCordova']);
+angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', 'checklist-model', 'angular-dialgauge', 'ngCordova'])
 
-BeneAdd.run(function($ionicPlatform, $cordovaHealthKit, $ionicModal, $cordovaLocalNotification) {
+.run(function($ionicPlatform, $cordovaHealthKit, $ionicModal, $cordovaLocalNotification) {
   var bgGeo;
 
   $ionicPlatform.ready(function() {
@@ -16,13 +16,6 @@ BeneAdd.run(function($ionicPlatform, $cordovaHealthKit, $ionicModal, $cordovaLoc
       // cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
 
-      // healthkit
-      $cordovaHealthKit.isAvailable().then(function(yes) {
-
-      }, function(no) {
-        // Is not available
-        $scope.healthkitAvail = false;
-      });
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required

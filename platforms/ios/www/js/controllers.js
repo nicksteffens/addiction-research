@@ -41,6 +41,11 @@ angular.module('starter.controllers', [])
   $scope.eligible = JSON.parse(window.localStorage.getItem('eligible'));
   $scope.consent = JSON.parse(window.localStorage.getItem('consent'));
 
+  // healthkit check
+  if( $cordovaHealthKit ) {
+  }
+
+
   $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
     // regrab locals
     if (toState.url === '/home') {
@@ -226,7 +231,7 @@ angular.module('starter.controllers', [])
     $scope.takingSurvey = false;
     var surveyResults = irkResults.getResults();
     // did they complete the survey
-    if (surveyResults.childResults.length > 0) {
+    if (surveyResults.childResults.length > 0 && !surveyResults.canceled) {
       postAnswers(surveyResults)
     }
     $scope.modal.remove();
@@ -279,6 +284,9 @@ angular.module('starter.controllers', [])
           break;
         case 'scale':
           questionsArray.push('<irk-task><irk-scale-question-step id="q'+questions[i].id+'" title="'+questions[i].question+'" text="1 being Never &amp; 5 Almost Always" min="1" max="5" step="1" value="3" /></irk-task>');
+          break;
+        case 'choice':
+          questionsArray.push('<irk-task><irk-text-choice-question-step id="q'+questions[i].id+'" title="'+questions[i].question+'" style="single"><irk-text-choice text="1 Never" value="1"></irk-text-choice><irk-text-choice text="2 Rarely" value="2"></irk-text-choice><irk-text-choice text="3 Sometimes" value="3"></irk-text-choice><irk-text-choice text="4 Often" value="4"></irk-text-choice><irk-text-choice text="5 Almost Alway" value="5"></irk-text-choice></irk-text-choice></irk-text-choice-question-step></irk-task>')
           break;
       }
     }

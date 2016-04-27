@@ -84,6 +84,9 @@
         },
         "de.appplant.cordova.plugin.local-notification": {
             "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
+        },
+        "org.transistorsoft.cordova.background-geolocation": {
+            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
         }
     },
     "dependent_plugins": {

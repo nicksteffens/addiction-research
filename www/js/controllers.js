@@ -23,13 +23,14 @@ angular.module('starter.controllers', [])
   'config',
   '$scope',
   '$ionicModal',
+  '$ionicPlatform',
   '$cordovaGeolocation',
   '$timeout',
   '$cordovaHealthKit',
   '$http',
   '$rootScope',
   '$cordovaLocalNotification',
-  function(config, $scope, $ionicModal, $cordovaGeolocation, $timeout, $cordovaHealthKit, $http, $rootScope, $cordovaLocalNotification) {
+  function(config, $scope, $ionicModal, $ionicPlatform, $cordovaGeolocation, $timeout, $cordovaHealthKit, $http, $rootScope, $cordovaLocalNotification) {
 
   // constant vars
   $scope.loginData = {};
@@ -40,6 +41,67 @@ angular.module('starter.controllers', [])
   $scope.geolocation = {};
   $scope.eligible = JSON.parse(window.localStorage.getItem('eligible'));
   $scope.consent = JSON.parse(window.localStorage.getItem('consent'));
+  $scope.healthkitAvail = false;
+
+  // healthkit check
+  // $cordovaHealthKit.isAvailable().then(function(yes) {
+  //   // Is available
+  // }, function(no) {
+  //   // Is not available
+  // });
+
+  $ionicPlatform.ready(function() {
+    if ( window.cordova ) {
+      // local notifications permissions
+        $cordovaLocalNotification.hasPermission().then(function(hasPermission) {
+          console.log(hasPermission ? "has permissions" : "no permissions");
+
+          if (!hasPermission) {
+            registerPermission();
+          } else {
+            hasScheduledPermission();
+          }
+        });
+
+      // hasScheduledPermission
+      function hasScheduledPermission() {
+        $cordovaLocalNotification.isPresent(12345, $scope).then(function(isPresent) {
+            // console.log(isPresent ? "scheduled note" : "no scheduled");
+            if($scope.consent) {
+              if (!isPresent) {
+                scheduleNotification();
+              } else {
+
+              }
+            }
+          });
+      }
+
+      // schedule
+      function scheduleNotification() {
+        $cordovaLocalNotification.schedule({
+            id: 12345,
+            title: 'You have pending Survey',
+            text: 'Please comeback to take survey.',
+            every: config.notifications.every
+          }).then(function (result) {
+            // do something
+            console.log(JSON.stringify(result));
+          });
+      }
+
+      // register permissions
+      function registerPermission() {
+        $cordovaLocalNotification.registerPermission().then(function(registeredPermission) {
+          console.log('registeredPermission');
+        });
+      }
+    }
+  });
+
+
+
+
 
 
   $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
@@ -50,19 +112,6 @@ angular.module('starter.controllers', [])
       $scope.user = JSON.parse(window.localStorage.getItem('user'));
     }
   });
-  // // local notifications
-  // $cordovaLocalNotification.isScheduled("101")
-  //   .then(function(isScheduled) {
-  //     console.log("is scheduled", isScheduled);
-  //   });
-  // $cordovaLocalNotification.schedule emb({
-  //     id: "101",
-  //     title: 'You have pending Survey',
-  //     text: 'Please comeback to take survey.',
-  //     every: config.notifications.every
-  //   }).then(function (result) {
-  //     // do something
-  //   });
 
   // ======
   // Modals

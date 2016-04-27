@@ -66,6 +66,7 @@
 		0F825ECF6DEB49F68310DF5D /* APPLocalNotificationOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 141AE60BEA5641CA8A7B306A /* APPLocalNotificationOptions.m */; };
 		CDB6A44E056F4C47B8F53618 /* UIApplication+APPLocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 37C348B8E7DB4167BD8FB1CE /* UIApplication+APPLocalNotification.m */; };
 		AFF6C4C471244E6B9DD54B87 /* UILocalNotification+APPLocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F85B210ABB5445A98C91254 /* UILocalNotification+APPLocalNotification.m */; };
+		C0F109D36A874A34ACC1B8B2 /* CDVBackgroundGeoLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A22714A8F59438E8A6E2883 /* CDVBackgroundGeoLocation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -177,6 +178,8 @@
 		3A5C6164C8E4420585B1021D /* APPLocalNotificationOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "APPLocalNotificationOptions.h"; path = "de.appplant.cordova.plugin.local-notification/APPLocalNotificationOptions.h"; sourceTree = "<group>"; fileEncoding = 4; };
 		E7B03C462CD34BCDAAD27ABA /* UIApplication+APPLocalNotification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIApplication+APPLocalNotification.h"; path = "de.appplant.cordova.plugin.local-notification/UIApplication+APPLocalNotification.h"; sourceTree = "<group>"; fileEncoding = 4; };
 		A2B4F564902B4E9289172662 /* UILocalNotification+APPLocalNotification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UILocalNotification+APPLocalNotification.h"; path = "de.appplant.cordova.plugin.local-notification/UILocalNotification+APPLocalNotification.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		1A22714A8F59438E8A6E2883 /* CDVBackgroundGeoLocation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVBackgroundGeoLocation.m"; path = "org.transistorsoft.cordova.background-geolocation/CDVBackgroundGeoLocation.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		04A4AD9EE6A44A688A1F8D40 /* CDVBackgroundGeoLocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVBackgroundGeoLocation.h"; path = "org.transistorsoft.cordova.background-geolocation/CDVBackgroundGeoLocation.h"; sourceTree = "<group>"; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -330,6 +333,8 @@
 				3A5C6164C8E4420585B1021D /* APPLocalNotificationOptions.h */,
 				E7B03C462CD34BCDAAD27ABA /* UIApplication+APPLocalNotification.h */,
 				A2B4F564902B4E9289172662 /* UILocalNotification+APPLocalNotification.h */,
+				1A22714A8F59438E8A6E2883 /* CDVBackgroundGeoLocation.m */,
+				04A4AD9EE6A44A688A1F8D40 /* CDVBackgroundGeoLocation.h */,
 			);
 			name = Plugins;
 			path = "addiction-research/Plugins";
@@ -547,6 +552,7 @@
 				0F825ECF6DEB49F68310DF5D /* APPLocalNotificationOptions.m in Sources */,
 				CDB6A44E056F4C47B8F53618 /* UIApplication+APPLocalNotification.m in Sources */,
 				AFF6C4C471244E6B9DD54B87 /* UILocalNotification+APPLocalNotification.m in Sources */,
+				C0F109D36A874A34ACC1B8B2 /* CDVBackgroundGeoLocation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

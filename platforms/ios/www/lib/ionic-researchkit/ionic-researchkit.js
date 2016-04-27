@@ -59,7 +59,6 @@ angular.module('ionicResearchKit',[])
 
             results.childResults[index].id = stepId;
             results.childResults[index].type = stepType;
-
             if (stepType == 'IRK-CONSENT-REVIEW-STEP' && consentType == 'review')
                 results.childResults[index].answer = (angular.isDefined(formData.consent)?formData.consent:null);
             else if (stepType == 'IRK-DATE-QUESTION-STEP')

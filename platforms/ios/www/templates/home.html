@@ -1,23 +1,52 @@
 <ion-view view-title="Home">
   <ion-header-bar>
-    <h1 class="title">Addiction Research</h1>
+    <h1 class="title" ng-hide="user">BeneAdd</h1>
+    <h1 class="title" ng-show="user">Profile</h1>
   </ion-header-bar>
-  <ion-content>
-    <!-- if not logged in -->
-    <div ng-hide="user">
-      <a class="button button-block button-stable" href="#/app/create">
-        Create Account
+  <ion-content class="padding">
+    <!-- Check Eligibility -->
+    <div ng-hide="eligible">
+      <a href="#/app/eligibility" class="button button-block button-calm">
+        Check Eligibility
       </a>
-      <button class="button button-block button-positive" ng-click="openModal('login')">
-        Login
-      </button>
     </div>
-    <!-- if logged in -->
+    <!-- eligible but no user -->
+    <div ng-show="eligible">
+      <div ng-hide="user">
+        <a class="button button-block button-stable" href="#/app/create">
+          Create Account
+        </a>
+        <button class="button button-block button-positive" ng-click="openModal('login')">
+          Login
+        </button>
+      </div>
+    </div>
+    <!-- eligible & user -->
     <div ng-show="user">
-      <p>You are currently logged in.</p>
-      <button class="button button-block button-positive" ng-click="openModal('logout')">
-        Logout
-      </button>
+      <div class="row">
+        <div class="col">
+          <h3>Welcome {{user.first_name}} {{user.last_name}}</h3>
+        </div>
+      </div>
+      <!-- consent -->
+      <div class="row" ng-hide="consent">
+        <div class="col">
+          <p>Before we get started we need your consent</p>
+          <a class="button button-block button-positive" href="#/app/consent">
+            Consent Agreement
+          </a>
+        </div>
+      </div>
+      <!-- additional Info -->
+      <div class="row" ng-show="consent">
+        <div class="col">
+          <p>We need some more information from you. Please click the following fill out the additional information:</p>
+
+          <button class="button button-block button-positive" ng-click="openModal('additional-info')">
+            Additional Info
+          </button>
+        </div>
+      </div>
     </div>
 
   </ion-content>

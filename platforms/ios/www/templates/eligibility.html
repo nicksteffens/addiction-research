@@ -1,0 +1,19 @@
+<ion-view view-title="Eligibility">
+  <ion-content class="padding">
+    <!-- needs to complete -->
+    <div ng-hide="eligible">
+      <p>You're eligibility check will load shortly. Or manually load it.</p>
+
+      <button class="button button-block button-positive" ng-click="openModal()">
+        Start Consent Form
+      </button>
+    </div>
+
+    <div ng-show="eligible">
+      <h2 style="text-align:center;">You are eligible.</h2>
+      <p>There is no need to complete eligibility. Or if you feel you have reached this page by accident please click the following:</p>
+
+      <a href="#/app/home" class="button button-block">Back to Home</a>
+    </div>
+  </ion-content>
+</ion-view>

@@ -35,6 +35,10 @@
     <feature name="BackgroundGeolocation">
         <param name="ios-package" value="CDVBackgroundGeolocation" />
     </feature>
+    <feature name="LocalNotification">
+        <param name="ios-package" onload="true" value="APPLocalNotification" />
+        <param name="onload" value="true" />
+    </feature>
     <name>addiction-research</name>
     <description>
         An Ionic Framework and Cordova project.
@@ -42,11 +46,9 @@
     <author email="you@example.com" href="http://example.com.com/">
       Your Name Here
     </author>
-    <content original-src="index.html" src="http://192.168.1.142:8100" />
+    <content original-src="index.html" src="index.html" />
     <access origin="*" />
     <preference name="AllowInlineMediaPlayback" value="false" />
-    <preference name="BackupWebStorage" value="none" />
-    <preference name="DisallowOverscroll" value="true" />
     <preference name="EnableViewportScale" value="false" />
     <preference name="KeyboardDisplayRequiresUserAction" value="true" />
     <preference name="MediaPlaybackRequiresUserAction" value="false" />
@@ -59,5 +61,7 @@
     <preference name="StatusBarStyle" value="lightcontent" />
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />
+    <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="16" />
+    <preference name="BackupWebStorage" value="none" />
 </widget>

@@ -24,10 +24,10 @@ angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', '
         console.log('healthkit not available');
       });
 
-      $cordovaLocalNotification.isPresent('101')
-        .then(function(isPresent) {
-          console.log('notif is present?' + isPresent);
-        });
+      // $cordovaLocalNotification.isPresent('101')
+      //   .then(function(isPresent) {
+      //     console.log('notif is present?' + isPresent);
+      //   });
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required

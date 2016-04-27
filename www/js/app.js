@@ -24,10 +24,10 @@ angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', '
         console.log('healthkit not available');
       });
 
-      $cordovaLocalNotification.isPresent('101')
-        .then(function(isPresent) {
-          console.log('notif is present?' + isPresent);
-        });
+      // $cordovaLocalNotification.isPresent('101')
+      //   .then(function(isPresent) {
+      //     console.log('notif is present?' + isPresent);
+      //   });
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
@@ -40,6 +40,7 @@ angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', '
 .run(function($http) {
   // set headers
   if(typeof(window.localStorage.user) !== "undefined"){
+    debugger;
     $http.defaults.headers.common.Authorization = JSON.parse(window.localStorage.getItem('user')).auth_token;
 }})
 

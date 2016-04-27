@@ -18,6 +18,7 @@ angular.module('starter.controllers', [])
    };
    return config;
  }])
+
 .controller('AppCtrl', [
   'config',
   '$scope',
@@ -48,12 +49,12 @@ angular.module('starter.controllers', [])
       $scope.user = JSON.parse(window.localStorage.getItem('user'));
     }
   });
-  // local notifications
+  // // local notifications
   // $cordovaLocalNotification.isScheduled("101")
   //   .then(function(isScheduled) {
   //     console.log("is scheduled", isScheduled);
   //   });
-  // $cordovaLocalNotification.schedule({
+  // $cordovaLocalNotification.schedule emb({
   //     id: "101",
   //     title: 'You have pending Survey',
   //     text: 'Please comeback to take survey.',

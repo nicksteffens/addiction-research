@@ -1,4 +1,27 @@
-# addiction-research
+# BeneAdd
+An iOS phone app for helping researchers survey / monitor addicts
+
+
+Configuration:
+---
+Inside of [controllers.js](https://github.com/nicksteffens/addiction-research/blob/master/www/js/controllers.js) there is a `config factory` with configuration data
+
+Here Are options:
+- geolocation
+  * disable _for debugging polling_
+  * timeout _polling timeout default is every 10 seconds, in milliseconds_
+- api  _urls to database_
+  * answers
+  * login
+  * questions
+  * user
+- notifications:
+  * disable
+  * every _how often they are schduled possible choices_
+    * 'minute'
+    * 'weekly'
+    * 'monthly'
+
 
 Current List of ToDo's:
 ---
@@ -42,4 +65,4 @@ Nick's Short listen
 - [ ] Notifications on the daily to take survey
 - [ ] Questions and how to get them... _sync with shakir_
   * In the mean time have it locally.
-- [ ] Login should now use Healthkit functions for height and weight 
+- [ ] Login should now use Healthkit functions for height and weight

@@ -2,8 +2,8 @@ angular.module('starter.controllers', [])
 .factory('config', [function() {
    var config = {
      geolocation: {
-       disable: true, // for debugging only
-       timeout: 5000 // in milliseconds
+       disable: false, // for debugging only
+       timeout: 10000
      },
      api: {
        answers: 'http://addictionresearch.herokuapp.com/answers',
@@ -12,7 +12,8 @@ angular.module('starter.controllers', [])
        users: 'http://addictionresearch.herokuapp.com/users/'
      },
      notifications: {
-       
+      disable: false, // for debugging only
+      every: 'minute'
      }
    };
    return config;
@@ -26,7 +27,8 @@ angular.module('starter.controllers', [])
   '$cordovaHealthKit',
   '$http',
   '$rootScope',
-  function(config, $scope, $ionicModal, $cordovaGeolocation, $timeout, $cordovaHealthKit, $http, $rootScope) {
+  '$cordovaLocalNotification',
+  function(config, $scope, $ionicModal, $cordovaGeolocation, $timeout, $cordovaHealthKit, $http, $rootScope, $cordovaLocalNotification) {
 
   // constant vars
   $scope.loginData = {};
@@ -46,6 +48,19 @@ angular.module('starter.controllers', [])
       $scope.user = JSON.parse(window.localStorage.getItem('user'));
     }
   });
+  // local notifications
+  // $cordovaLocalNotification.isScheduled("101")
+  //   .then(function(isScheduled) {
+  //     console.log("is scheduled", isScheduled);
+  //   });
+  // $cordovaLocalNotification.schedule({
+  //     id: "101",
+  //     title: 'You have pending Survey',
+  //     text: 'Please comeback to take survey.',
+  //     every: config.notifications.every
+  //   }).then(function (result) {
+  //     // do something
+  //   });
 
   // ======
   // Modals
@@ -160,10 +175,9 @@ angular.module('starter.controllers', [])
   // ===========
   // Geolocation
   // ===========
-  var posOptions = { timeout: 3000, enableHighAccuracy: false };
-  var watchDelay = 5000;
+  var posOptions = { timeout: 5000, enableHighAccuracy: false };
 
-  if ( $scope.user && config.geolocation.on) {
+  if ( $scope.user && !config.geolocation.disable) {
     var bgGeolocationWatch = window.setInterval(function() {
       $cordovaGeolocation
        .getCurrentPosition(posOptions)
@@ -174,7 +188,7 @@ angular.module('starter.controllers', [])
        }, function(err) {
           console.log('get error ' + err.message + '\ncode: ' + err.code);
        });
-    }, watchDelay);
+    }, config.geolocation.timeout);
   }
 
 

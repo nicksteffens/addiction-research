@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', 'checklist-model', 'angular-dialgauge', 'ngCordova'])
 
-.run(function($ionicPlatform, $cordovaHealthKit, $ionicModal) {
+.run(function($ionicPlatform, $cordovaHealthKit, $ionicModal, $cordovaLocalNotification) {
   var bgGeo;
 
   $ionicPlatform.ready(function() {
@@ -23,6 +23,11 @@ angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', '
         // Is not available
         console.log('healthkit not available');
       });
+
+      $cordovaLocalNotification.isPresent('101')
+        .then(function(isPresent) {
+          console.log('notif is present?' + isPresent);
+        });
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required

@@ -41,7 +41,7 @@ angular.module('starter.controllers', [])
   $scope.geolocation = {};
   $scope.eligible = JSON.parse(window.localStorage.getItem('eligible'));
   $scope.consent = JSON.parse(window.localStorage.getItem('consent'));
-  $scope.healthkitAvail = false;
+  $scope.showSurvey = false;
 
   // healthkit check
   // $cordovaHealthKit.isAvailable().then(function(yes) {
@@ -49,12 +49,14 @@ angular.module('starter.controllers', [])
   // }, function(no) {
   //   // Is not available
   // });
-
+  // ============
+  // notifcations
+  // ============
   $ionicPlatform.ready(function() {
     if ( window.cordova ) {
       // local notifications permissions
         $cordovaLocalNotification.hasPermission().then(function(hasPermission) {
-          console.log(hasPermission ? "has permissions" : "no permissions");
+          // console.log(hasPermission ? "has permissions" : "no permissions");
 
           if (!hasPermission) {
             registerPermission();
@@ -86,29 +88,33 @@ angular.module('starter.controllers', [])
             every: config.notifications.every
           }).then(function (result) {
             // do something
-            console.log(JSON.stringify(result));
           });
       }
 
       // register permissions
       function registerPermission() {
         $cordovaLocalNotification.registerPermission().then(function(registeredPermission) {
-          console.log('registeredPermission');
+          // console.log('registeredPermission');
         });
       }
 
       // listen for action
       function listenForNotificationClick() {
+        // console.log('listening for click');
         $rootScope.$on('$cordovaLocalNotification:click', function(event, notification, state) {
-          console.log('clicked');
+
+          $cordovaLocalNotification.cancelAll().then(function(action) {
+            console.log('notification canceled');
+            $scope.showSurvey = true;
+          });
         })
       }
+
+      // ====================
+      // end of notifications
+      // ====================
     }
   });
-
-
-
-
 
 
   $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
@@ -269,7 +275,7 @@ angular.module('starter.controllers', [])
 // ============
 // Survey Stuff
 // ============
-.controller('SurveyCtrl', ['config', '$scope', '$ionicModal', '$http', 'irkResults', function(config, $scope, $ionicModal, $http, irkResults) {
+.controller('SurveyCtrl', ['config', '$scope', '$ionicModal', '$http', 'irkResults', '$cordovaLocalNotification', function(config, $scope, $ionicModal, $http, irkResults, $cordovaLocalNotification) {
   $scope.takingSurvey = false;
   $scope.surveyError = false;
   $scope.surveyComplete = false;
@@ -369,6 +375,20 @@ angular.module('starter.controllers', [])
       console.log('answers posted', response);
     }, function errorCallback(response) {
       console.log('an error has ocurred', response);
+    }).finally(function(){
+      // reschedule notifications
+      if( window.cordova ) {
+        $cordovaLocalNotification.schedule({
+            id: 12345,
+            title: 'You have pending Survey',
+            text: 'Please comeback to take survey.',
+            every: config.notifications.every
+          }).then(function (result) {
+            // do something
+            console.log('notification rescheduled');
+            window.location.hash = "#/app/home";
+          });
+      }
     });
 
 

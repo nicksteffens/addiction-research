@@ -13,10 +13,8 @@
       <p ng-show="surveyError" class="assertive">There was a problem retrieving your survey, Please try again</p>
     </div>
 
-    <div class="row" ng-show="takingSurvey">
-      <div class="col-33 col-offset-33 padding">
-        <ion-spinner class="spinner"></ion-spinner>
-      </div>
+    <div style="text-align:center;" class="padding-vertical" ng-show="takingSurvey">
+      <ion-spinner class="spinner"></ion-spinner>
     </div>
 
     <div class="row" ng-show="surveyComplete">

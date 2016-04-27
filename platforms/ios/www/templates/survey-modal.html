@@ -1,0 +1,24 @@
+<ion-modal-view class="irk-modal">
+  <irk-ordered-tasks>
+      <irk-task ng-repeat="q in questions track by $index">
+        <irk-scale-question-step
+          title="{{q.question}}"
+          text="1 being Never &amp; 5 Almost Always"
+            min="1" max="5" step="1" value="3" />
+        <!-- <form name="form.'+attr.id+'" class="irk-slider" novalidate>
+          <div class="irk-centered">
+            <div class="irk-text-centered">
+              <h3>{{q.question}}</h3>
+              <p>1 being Never &amp; 5 Almost Always</p>
+            </div>
+          </div>
+          <div class="irk-spacer"></div>
+          <h3>{{$parent.formData[q.id]}}</h3>
+          <div class="range">
+            <input type="range" name="{{q.id}}" min="1" max="5" step="1" value="3" ng-model="$parent.formData.q.id" ng-change="$parent.dirty()">
+          </div>
+        </form> -->
+      </irk-task>
+  </irk-ordered-tasks>
+
+</ion-modal-view>

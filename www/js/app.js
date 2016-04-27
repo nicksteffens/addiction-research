@@ -63,14 +63,6 @@ angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', '
       }
     }
   })
-  .state('app.profile', {
-    url: '/profile',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/profile.html'
-      }
-    }
-  })
   .state('app.survey', {
     url: '/survey',
     views: {
@@ -85,6 +77,24 @@ angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', '
     views: {
       'menuContent': {
         templateUrl: 'templates/debug.html'
+      }
+    }
+  })
+  .state('app.eligibility', {
+    url: '/eligibility',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/eligibility.html',
+        controller: 'EligibilityCtrl'
+      }
+    }
+  })
+  .state('app.consent', {
+    url: '/consent',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/consent.html',
+        controller: 'ConsentCtrl'
       }
     }
   });

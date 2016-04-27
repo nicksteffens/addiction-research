@@ -1,13 +1,20 @@
 angular.module('starter.controllers', [])
-
-.controller('AppCtrl', function($scope, $ionicModal, $cordovaHealthKit, $cordovaGeolocation, $timeout, $http) {
-
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+.factory('config', [function() {
+   var config = {
+     geolocation: {
+       disable: true, // for debugging only
+       timeout: 5000 // in milliseconds
+     },
+     api: {
+       answers: 'http://addictionresearch.herokuapp.com/answers',
+       login: 'http://addictionresearch.herokuapp.com/sessions',
+       questions: 'http://addictionresearch.herokuapp.com/questions',
+       users: 'http://addictionresearch.herokuapp.com/users/'
+     }
+   };
+   return config;
+ }])
+.controller('AppCtrl', function(config, $scope, $ionicModal, $cordovaGeolocation, $timeout, $cordovaHealthKit, $http) {
 
   // constant vars
   $scope.loginData = {};
@@ -15,19 +22,7 @@ angular.module('starter.controllers', [])
   $scope.errors = {};
   $scope.hasErrors = false;
   $scope.user = JSON.parse(window.localStorage.getItem('user'));
-  // $scope.required = window.required;
   $scope.geolocation = {};
-
-  // =========
-  // healthkit
-  // =========
-  $cordovaHealthKit.isAvailable().then(function(yes) {
-    // Is available
-    console.log('Has healthkit');
-  }, function(no) {
-    // Is not available
-    console.log('no healthkit');
-  });
 
   // ======
   // Modals
@@ -66,7 +61,7 @@ angular.module('starter.controllers', [])
   $scope.doLogin = function() {
     $http({
       method: 'POST',
-      url: 'http://addictionresearch.herokuapp.com/sessions',
+      url: config.api.login,
       data: {
         "session": {
             "email": $scope.loginData.email,
@@ -88,7 +83,7 @@ angular.module('starter.controllers', [])
   $scope.doLogout = function () {
     window.localStorage.removeItem('user');
     $scope.user = {};
-    $scope.closeLogout();
+    $scope.closeModal('logout');
     window.location.hash = "#/app/home"
   };
 
@@ -98,7 +93,7 @@ angular.module('starter.controllers', [])
 
     $http({
       method: 'POST',
-      url: 'http://addictionresearch.herokuapp.com/users/',
+      url: config.api.users,
       data: {
         "user": createUser
       }
@@ -142,10 +137,10 @@ angular.module('starter.controllers', [])
   // ===========
   // Geolocation
   // ===========
-  var posOptions = {timeout: 3000, enableHighAccuracy: false};
+  var posOptions = { timeout: 3000, enableHighAccuracy: false };
   var watchDelay = 5000;
 
-  if ( $scope.user ) {
+  if ( $scope.user && config.geolocation.on) {
     var bgGeolocationWatch = window.setInterval(function() {
       $cordovaGeolocation
        .getCurrentPosition(posOptions)
@@ -176,6 +171,112 @@ angular.module('starter.controllers', [])
   // End of Geolocation
   // ==================
 })
+// ============
+// Survey Stuff
+// ============
+.controller('SurveyCtrl', ['config', '$scope', '$ionicModal', '$http', 'irkResults', function(config, $scope, $ionicModal, $http, irkResults) {
+  $scope.takingSurvey = false;
+  $scope.surveyError = false;
+  $scope.surveyComplete = false;
 
+  $scope.openModal = function() {
+    $scope.takingSurvey = true;
+    getQuestions();
+  };
+
+  $scope.closeModal = function() {
+    $scope.takingSurvey = false;
+    var surveyResults = irkResults.getResults();
+    // did they complete the survey
+    if (surveyResults.childResults.length > 0) {
+      postAnswers(surveyResults)
+    }
+    $scope.modal.remove();
+  };
+
+  // Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
+
+  // get the questions
+  function getQuestions() {
+    $http({
+      method: 'GET',
+      url: config.api.questions
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      console.log('Retrieved Questions', $scope.questions);
+      $scope.modal = $ionicModal.fromTemplate(renderSurvey(response.data.questions), {
+        scope: $scope,
+        animation: 'slide-in-up'
+      });
+      $scope.modal.show();
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      $scope.takingSurvey = false;
+      $scope.surveyError = true;
+      console.log('questions error', response);
+    });
+  }
+
+  function renderSurvey(questions) {
+    return '<ion-modal-view class="irk-modal">'+
+      '<irk-ordered-tasks>'+
+          renderQuestions(questions)+
+      '</irk-ordered-tasks>'+
+    '</ion-modal-view>';
+  }
+
+  function renderQuestions(questions) {
+    var questionsArray = [];
+    for(var i = 0; i < questions.length; i++ ) {
+      var questionType = questions[i].q_type;
+
+      switch (questionType) {
+        case 'boolean':
+          questionsArray.push('<irk-task><irk-boolean-question-step id="q'+questions[i].id+'" title="'+questions[i].question+'" text="Additional text can go here." true-text="Yes" false-text="No" /></irk-task>');
+          break;
+        case 'scale':
+          questionsArray.push('<irk-task><irk-scale-question-step id="q'+questions[i].id+'" title="'+questions[i].question+'" text="1 being Never &amp; 5 Almost Always" min="1" max="5" step="1" value="3" /></irk-task>');
+          break;
+      }
+    }
+    return questionsArray.join('\n');
+  }
+
+  function postAnswers(surveyResults) {
+    var answersArray = [];
+    var userId = JSON.parse(window.localStorage.user).id
+
+    for(var i = 0; i < surveyResults.childResults.length; i++) {
+      var questionId = surveyResults.childResults[i].id.slice(1);
+      answersArray.push({
+        "answer": {
+          "user_id": userId,
+          "question_id": questionId,
+          "answer": surveyResults.childResults[i].answer
+        }
+      });
+    };
+    debugger;
+    $http({
+      method: 'POST',
+      url: config.api.answers,
+      data: {
+        "answers": answersArray
+      }
+    }).then(function successCallback(response) {
+      console.log('answers posted', response);
+    }, function errorCallback(response) {
+      console.log('an error has ocurred', response);
+    });
+
+
+  }
+
+}])
 .controller('SplashCtrl', function($scope, $stateParams) {
 });

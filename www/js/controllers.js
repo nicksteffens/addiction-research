@@ -10,11 +10,23 @@ angular.module('starter.controllers', [])
        login: 'http://addictionresearch.herokuapp.com/sessions',
        questions: 'http://addictionresearch.herokuapp.com/questions',
        users: 'http://addictionresearch.herokuapp.com/users/'
+     },
+     notifications: {
+       
      }
    };
    return config;
  }])
-.controller('AppCtrl', function(config, $scope, $ionicModal, $cordovaGeolocation, $timeout, $cordovaHealthKit, $http) {
+.controller('AppCtrl', [
+  'config',
+  '$scope',
+  '$ionicModal',
+  '$cordovaGeolocation',
+  '$timeout',
+  '$cordovaHealthKit',
+  '$http',
+  '$rootScope',
+  function(config, $scope, $ionicModal, $cordovaGeolocation, $timeout, $cordovaHealthKit, $http, $rootScope) {
 
   // constant vars
   $scope.loginData = {};
@@ -23,6 +35,17 @@ angular.module('starter.controllers', [])
   $scope.hasErrors = false;
   $scope.user = JSON.parse(window.localStorage.getItem('user'));
   $scope.geolocation = {};
+  $scope.eligible = JSON.parse(window.localStorage.getItem('eligible'));
+  $scope.consent = JSON.parse(window.localStorage.getItem('consent'));
+
+  $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+    // regrab locals
+    if (toState.url === '/home') {
+      $scope.eligible = JSON.parse(window.localStorage.getItem('eligible'));
+      $scope.consent = JSON.parse(window.localStorage.getItem('consent'));
+      $scope.user = JSON.parse(window.localStorage.getItem('user'));
+    }
+  });
 
   // ======
   // Modals
@@ -170,13 +193,14 @@ angular.module('starter.controllers', [])
   // ==================
   // End of Geolocation
   // ==================
-})
+}])
 // ============
 // Survey Stuff
 // ============
 .controller('SurveyCtrl', ['config', '$scope', '$ionicModal', '$http', 'irkResults', function(config, $scope, $ionicModal, $http, irkResults) {
   $scope.takingSurvey = false;
   $scope.surveyError = false;
+  $scope.surveyComplete = false;
 
   $scope.openModal = function() {
     $scope.takingSurvey = true;
@@ -185,13 +209,16 @@ angular.module('starter.controllers', [])
 
   $scope.closeModal = function() {
     $scope.takingSurvey = false;
-    console.log('get results', irkResults.getResults());
+    var surveyResults = irkResults.getResults();
+    // did they complete the survey
+    if (surveyResults.childResults.length > 0) {
+      postAnswers(surveyResults)
+    }
     $scope.modal.remove();
   };
 
   // Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function() {
-    console.log("survey results", $scope.data);
     $scope.modal.remove();
   });
 
@@ -228,7 +255,7 @@ angular.module('starter.controllers', [])
 
   function renderQuestions(questions) {
     var questionsArray = [];
-    for(i = 0; i < questions.length; i++ ) {
+    for(var i = 0; i < questions.length; i++ ) {
       var questionType = questions[i].q_type;
 
       switch (questionType) {
@@ -242,6 +269,171 @@ angular.module('starter.controllers', [])
     }
     return questionsArray.join('\n');
   }
+
+  function postAnswers(surveyResults) {
+    var answersArray = [];
+    var userId = JSON.parse(window.localStorage.user).id
+
+    for(var i = 0; i < surveyResults.childResults.length; i++) {
+      var questionId = surveyResults.childResults[i].id.slice(1);
+      answersArray.push({
+        "answer": {
+          "user_id": userId,
+          "question_id": questionId,
+          "answer": surveyResults.childResults[i].answer
+        }
+      });
+    };
+    // TODO:
+    // how to post to answers shakir
+    $http({
+      method: 'POST',
+      url: config.api.answers,
+      data: JSON.stringify(answersArray),
+    }).then(function successCallback(response) {
+      console.log('answers posted', response);
+    }, function errorCallback(response) {
+      console.log('an error has ocurred', response);
+    });
+
+
+  }
+
+}])
+// ======================
+// eligibility controller
+// ======================
+.controller('EligibilityCtrl', [
+  'config',
+  '$scope',
+  '$ionicModal',
+  '$http',
+  'irkResults',
+  function(config, $scope, $ionicModal, $http, irkResults) {
+    $scope.eligible = JSON.parse(window.localStorage.getItem('eligible'));
+    irkResults = irkResults;
+
+    $ionicModal.fromTemplateUrl('templates/eligibility-survey.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+      if ( !$scope.eligible ) {
+        $scope.modal.show();
+      }
+    });
+
+    $scope.openModal = function() {
+      $scope.modal.show();
+    };
+
+    $scope.closeModal = function() {
+      $scope.modal.hide();
+    };
+    // Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+      $scope.modal.remove();
+    });
+    // Execute action on hide modal
+    $scope.$on('modal.hidden', function() {
+      // Execute action
+      checkEligibility();
+    });
+    // Execute action on remove modal
+    $scope.$on('modal.removed', function() {
+      // Execute action
+    });
+
+    function checkEligibility() {
+      var answers = irkResults.getResults().childResults;
+      for(var i = 0; i < answers.length; i++) {
+        if ( answers[i].answer === "true") {
+          window.localStorage.setItem('eligible', true);
+          $scope.eligible = window.localStorage.getItem('eligible');
+          window.location = "#/app/home";
+        }
+      }
+    }
+  }
+])
+// ==================
+// consent controller
+// ==================
+.controller('ConsentCtrl', [
+  'config',
+  '$scope',
+  '$ionicModal',
+  '$http',
+  'irkResults',
+  function(config, $scope, $ionicModal, $http, irkResults) {
+    $scope.consent = JSON.parse(window.localStorage.getItem('consent'));
+    irkResults = irkResults;
+
+    $ionicModal.fromTemplateUrl('templates/consent-survey.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+      if ( !$scope.consent ) {
+        $scope.modal.show();
+      }
+    });
+
+    $scope.openModal = function() {
+      $scope.modal.show();
+    };
+
+    $scope.closeModal = function() {
+      $scope.modal.hide();
+    };
+    // Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+      $scope.modal.remove();
+    });
+    // Execute action on hide modal
+    $scope.$on('modal.hidden', function() {
+      // Execute action
+      updateConsent();
+    });
+    // Execute action on remove modal
+    $scope.$on('modal.removed', function() {
+      // Execute action
+    });
+
+    function updateConsent() {
+      var consentResults = irkResults.getResults().childResults;
+      var consent = {};
+      // find consents
+      for(var i = 0; i < consentResults.length; i++) {
+          // has consent
+          if ( consentResults[i].answer === true ) {
+            consent.hasConsented = true;
+          }
+          // attact sign
+          if ( consentResults[i].signature ) {
+            consent.signature = consentResults[i].signature;
+          }
+          // name
+          if (typeof(consentResults[i].answer) === 'object') {
+            consent.first_name = consentResults[i].answer.s1.givenName;
+            consent.last_name  = consentResults[i].answer.s1.familyName;
+          }
+
+          if ( consentResults[i].type === 'IRK-CONSENT-SHARING-STEP' ) {
+            consent.sharing = consentResults[i].answer;
+          }
+      }
+      // add consent
+      if ( consent.hasConsented ) {
+        window.localStorage.setItem('consent', JSON.stringify(consent));
+        $scope.consent = window.localStorage.getItem('consent');
+
+        window.location.hash = "#/app/home";
+      }
+
+
+    }
+
 }])
 .controller('SplashCtrl', function($scope, $stateParams) {
 });

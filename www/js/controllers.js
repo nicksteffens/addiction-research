@@ -59,6 +59,22 @@ angular.module('starter.controllers', [])
   $scope.showSurvey = false;
   $scope.showInstructions = false;
   $scope.loadSpinner = false;
+  // computeds
+  $scope.hasMissingData = function() {
+    if($scope.user) {
+      return $scope.user.medical_id === null;
+    }
+    return false;
+  }
+
+  $scope.nothingForUser = function() {
+    if($scope.user && !$scope.hasMissingData() && !$scope.showSurvey) {
+      return true;
+    }
+
+    return false;
+
+  }
 
 
   $ionicPlatform.ready(function() {
@@ -227,10 +243,9 @@ angular.module('starter.controllers', [])
 
   $scope.doLogout = function () {
     window.localStorage.removeItem('user');
-    window.localStorage.removeItem('consent');
-    window.localStorage.removeItem('eligible');
     $scope.user = {};
     $scope.closeModal('logout');
+    window.location.hash = '#/app/home';
     window.location.reload();
   };
 
@@ -690,8 +705,13 @@ angular.module('starter.controllers', [])
       };
       $http.put(config.api.users+$scope.user.id, dataObj)
       .then(function successCallback(response) {
-        
+        // reset localStorage
+        window.localStorage.setItem('user', JSON.stringify(response.data.user));
+        // redirect home
+        window.location.hash = "#/app/home";
       }, function errorCallback(response) {
+        alert('Error with the server. Please try again');
+        window.location.reload();
         console.log('update user error', response.statusText);
       });
     }

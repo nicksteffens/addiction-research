@@ -227,8 +227,6 @@ angular.module('starter.controllers', [])
 
   $scope.doLogout = function () {
     window.localStorage.removeItem('user');
-    window.localStorage.removeItem('consent');
-    window.localStorage.removeItem('eligible');
     $scope.user = {};
     $scope.closeModal('logout');
     window.location.reload();
@@ -440,7 +438,7 @@ angular.module('starter.controllers', [])
     }).then(function successCallback(response) {
       console.log('answers posted', response);
     }, function errorCallback(response) {
-      console.log('an error has ocurred', response);
+      console.log('error submitting answers', response.statusText);
     }).finally(function(){
       // reschedule notifications
       rescheduleSurvey();
@@ -685,17 +683,14 @@ angular.module('starter.controllers', [])
     }
 
     function updateUser(answers) {
-      debugger;
-      $http({
-        method: 'PUT',
-        url: config.api.users+$scope.user.id,
-        data: {
-          user: answers
-        }
-      }).then(function successCallback(response) {
-        console.log('answers posted', response);
+      var dataObj = {
+        user: answers
+      };
+      $http.put(config.api.users+$scope.user.id, dataObj)
+      .then(function successCallback(response) {
+
       }, function errorCallback(response) {
-        console.log('an error has ocurred', response);
+        console.log('update user error', response.statusText);
       });
     }
 }])

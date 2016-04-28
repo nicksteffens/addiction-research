@@ -15,7 +15,7 @@ angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', '
     if (window.cordova && window.cordova.plugins.Keyboard) {
       // cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
-      
+
       // for click notifications
       window.cordova.plugins.notification.local.on('click', function (notification, state) {
         $timeout(function () {

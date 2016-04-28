@@ -15,19 +15,20 @@ angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', '
     if (window.cordova && window.cordova.plugins.Keyboard) {
       // cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
-
+      
+      // for click notifications
+      window.cordova.plugins.notification.local.on('click', function (notification, state) {
+        $timeout(function () {
+          $rootScope.$broadcast('$cordovaLocalNotification:click', notification, state);
+        });
+      });
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
 
-    // for click notifications
-    window.cordova.plugins.notification.local.on('click', function (notification, state) {
-      $timeout(function () {
-        $rootScope.$broadcast('$cordovaLocalNotification:click', notification, state);
-      });
-    });
+
 
   });
 })
@@ -95,6 +96,15 @@ angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', '
       'menuContent': {
         templateUrl: 'templates/consent.html',
         controller: 'ConsentCtrl'
+      }
+    }
+  })
+  .state('app.additional', {
+    url: '/additional',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/additional-info.html',
+        controller: 'AdditionalInfoCtrl'
       }
     }
   });

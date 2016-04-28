@@ -3,24 +3,34 @@
     <h1 class="title">Addiction Research</h1>
   </ion-header-bar>
   <ion-content class="padding">
-    <div class="start-survey" ng-hide="takingSurvey">
-      <p>Please take the time to fill out the following survey:</p>
-
-      <button class="button button-block button-calm" ng-click="openModal()" ng-hide="takingSurvey">
-        Take Survey
-      </button>
+    <!-- survey gate -->
+    <div class="start-survey" ng-show="canSurvey">
+      <div ng-hide="loadSpinner">
+        <p class="padding">For the past 30 days, did you drink any type of alcoholic beverage?</p>
+        <button class="button button-block button-light" ng-click="openModal()">
+          Yes
+        </button>
+        <button class="button button-block button-light" ng-click="noSurvey()">
+          No
+        </button>
+      </div>
       <!-- error state -->
-      <p ng-show="surveyError" class="assertive">There was a problem retrieving your survey, Please try again</p>
+      <p ng-show="surveyError" class="assertive">There was a problem retrieving your survey, Please try again.</p>
     </div>
 
-    <div style="text-align:center;" class="padding-vertical" ng-show="takingSurvey">
+    <div style="text-align:center;" class="padding-vertical" ng-show="loadSpinner">
       <ion-spinner class="spinner"></ion-spinner>
     </div>
 
-    <div class="row" ng-show="surveyComplete">
-      <div class="col padding">
-        <p>Thank you for taking the survey.</p>
-      </div>
+    <div ng-hide="canSurvey">
+      <p>Since you haven't drank anything in the past 30 days the survey is not required.</p>
+      <button class="button button-block button-stable" ng-click="backToHome()">
+        Back to Home
+      </button>
+    </div>
+
+    <div ng-show="surveyComplete">
+      <p class="padding">Thank you completeing the survey.</p>
     </div>
 
   </ion-content>

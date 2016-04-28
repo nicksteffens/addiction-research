@@ -14,7 +14,19 @@ angular.module('starter.controllers', [])
      notifications: {
       disable: false, // for debugging only
       every: 'minute'
-     }
+    },
+    // taken from healthkit documentation
+    healthkit: {
+      height: {
+        unit: 'in'
+      },
+      weight: {
+        unit: 'lb'
+      },
+      heart_rate: {
+        unit: 'count/min'
+      }
+    }
    };
    return config;
  }])
@@ -42,17 +54,44 @@ angular.module('starter.controllers', [])
   $scope.eligible = JSON.parse(window.localStorage.getItem('eligible'));
   $scope.consent = JSON.parse(window.localStorage.getItem('consent'));
   $scope.showSurvey = false;
+  $scope.showInstructions = false;
 
-  // healthkit check
-  // $cordovaHealthKit.isAvailable().then(function(yes) {
-  //   // Is available
-  // }, function(no) {
-  //   // Is not available
-  // });
-  // ============
-  // notifcations
-  // ============
+
   $ionicPlatform.ready(function() {
+    // =====================
+    // healthkit permissions
+    // =====================
+    if ( window.cordova ) {
+      $cordovaHealthKit.isAvailable().then(function(yes) {
+        // Is available
+        console.log('HK avail')
+      }, function(no) {
+        console.log('no HK')
+        requestHealthKit();
+      });
+
+      function requestHealthKit() {
+        $cordovaHealthKit.requestAuthorization(
+          [
+            'HKCharacteristicTypeIdentifierDateOfBirth',
+            'HKQuantityTypeIdentifierWeight',
+            'HKQuantityTypeIdentifierHeight'
+          ],
+          [
+            'HKCharacteristicTypeIdentifierDateOfBirth',
+            'HKQuantityTypeIdentifierHeight',
+            'HKQuantityTypeIdentifierWeight'
+          ]
+        ).then(function(success) {
+          $scope.granted = true;
+        }, function(err) {
+          $scope.granted = false;
+        });
+      }
+    }
+    // =============
+    // notifications
+    // =============
     if ( window.cordova ) {
       // local notifications permissions
         $cordovaLocalNotification.hasPermission().then(function(hasPermission) {
@@ -184,9 +223,11 @@ angular.module('starter.controllers', [])
 
   $scope.doLogout = function () {
     window.localStorage.removeItem('user');
+    window.localStorage.removeItem('consent');
+    window.localStorage.removeItem('eligible');
     $scope.user = {};
     $scope.closeModal('logout');
-    window.location.hash = "#/app/home"
+    window.location.reload();
   };
 
   $scope.doCreate = function() {
@@ -261,7 +302,7 @@ angular.module('starter.controllers', [])
     $scope.geolocation.lat  = position.coords.latitude;
     $scope.geolocation.long = position.coords.longitude;
     $scope.geolocation.timestamp = position.timestamp;
-    console.log('update geolocation '
+    console.log('update geolocation'
       + $scope.geolocation.lat + '   '
       + $scope.geolocation.long + '\nat: '
       + $scope.geolocation.timestamp
@@ -276,21 +317,35 @@ angular.module('starter.controllers', [])
 // Survey Stuff
 // ============
 .controller('SurveyCtrl', ['config', '$scope', '$ionicModal', '$http', 'irkResults', '$cordovaLocalNotification', function(config, $scope, $ionicModal, $http, irkResults, $cordovaLocalNotification) {
-  $scope.takingSurvey = false;
-  $scope.surveyError = false;
   $scope.surveyComplete = false;
+  $scope.surveyError = false;
+  $scope.canSurvey = true;
+  $scope.hideGate = false;
+  $scope.loadSpinner = false;
+
+  $scope.backToHome = function() {
+    rescheduleSurvey();
+  }
+
+  $scope.noSurvey = function() {
+    $scope.canSurvey = false;
+  }
 
   $scope.openModal = function() {
-    $scope.takingSurvey = true;
+    $scope.loadSpinner = true;
     getQuestions();
   };
 
   $scope.closeModal = function() {
-    $scope.takingSurvey = false;
     var surveyResults = irkResults.getResults();
     // did they complete the survey
     if (surveyResults.childResults.length > 0 && !surveyResults.canceled) {
-      postAnswers(surveyResults)
+      $scope.surveyComplete = true;
+      postAnswers(surveyResults);
+    }
+
+    if ( surveyResults.canceled ) {
+      $scope.loadSpinner = false;
     }
     $scope.modal.remove();
   };
@@ -317,7 +372,7 @@ angular.module('starter.controllers', [])
     }, function errorCallback(response) {
       // called asynchronously if an error occurs
       // or server returns response with an error status.
-      $scope.takingSurvey = false;
+      $scope.loadSpinner = false;
       $scope.surveyError = true;
       console.log('questions error', response);
     });
@@ -377,21 +432,29 @@ angular.module('starter.controllers', [])
       console.log('an error has ocurred', response);
     }).finally(function(){
       // reschedule notifications
-      if( window.cordova ) {
-        $cordovaLocalNotification.schedule({
-            id: 12345,
-            title: 'You have pending Survey',
-            text: 'Please comeback to take survey.',
-            every: config.notifications.every
-          }).then(function (result) {
-            // do something
-            console.log('notification rescheduled');
-            window.location.hash = "#/app/home";
-          });
-      }
+      rescheduleSurvey();
     });
+  }
 
-
+  function rescheduleSurvey() {
+    if( window.cordova ) {
+      $cordovaLocalNotification.schedule({
+        id: 12345,
+        title: 'You have pending Survey',
+        text: 'Please comeback to take survey.',
+        every: config.notifications.every
+      }).then(function (result) {
+        // reset scope
+        $scope.surveyComplete = false;
+        $scope.surveyError = false;
+        $scope.canSurvey = true;
+        $scope.hideGate = false;
+        $scope.loadSpinner = false;
+        // do something
+        console.log('notification rescheduled');
+        window.location.hash = "#/app/home";
+      });
+    }
   }
 
 }])
@@ -529,6 +592,84 @@ angular.module('starter.controllers', [])
 
     }
 
+}])
+.controller('AdditionalInfoCtrl', [
+  'config',
+  '$scope',
+  '$ionicModal',
+  '$ionicPlatform',
+  '$http',
+  'irkResults',
+  '$cordovaHealthKit',
+  function(config, $scope, $ionicModal, $ionicPlatform, $http, irkResults, $cordovaHealthKit) {
+    irkResults = irkResults;
+
+    $ionicModal.fromTemplateUrl('templates/additional-info-survey.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      console.log('show modal');
+      $scope.modal = modal;
+      $scope.modal.show();
+    });
+
+    $scope.openModal = function() {
+      $scope.modal.show();
+    };
+
+    $scope.closeModal = function() {
+      var surveyResults = irkResults.getResults();
+      // did they complete the survey
+      if (surveyResults.childResults.length > 0 && !surveyResults.canceled) {
+        updateInfo(surveyResults);
+      }
+
+      if ( surveyResults.canceled ) {
+        window.location.hash = "#/app/home";
+      }
+      $scope.modal.hide();
+    };
+    // Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+      $scope.modal.remove();
+    });
+    // Execute action on hide modal
+    $scope.$on('modal.hidden', function() {
+      // Execute action
+    });
+    // Execute action on remove modal
+    $scope.$on('modal.removed', function() {
+      // Execute action
+    });
+
+    function updateInfo(results) {
+      console.log(results);
+      var answers = results.childResults[0].answer;
+      var date = results.end;
+
+      updateHealthKit(answers, date);
+      // TODO:
+      // 1. PUT to the user on api
+      // 2. Update user in local storage
+    }
+
+    function updateHealthKit(answer, date) {
+      if( window.cordova ) {
+        // healthkit check
+        $cordovaHealthKit.isAvailable().then(function(yes) {
+          // save weight
+          $cordovaHealthKit.saveWeight(answer.weight, config.healthkit.weight.unit, date).then(function(v) {
+          }, function(err) {
+            console.log('weight error' + err);
+          });
+          // save height
+          $cordovaHealthKit.saveWeight(answer.height, config.healthkit.height.unit, date).then(function(v) {
+          }, function(err) {
+            console.log('height error' + err);
+          });
+        }, function(no) {});
+      }
+    }
 }])
 .controller('SplashCtrl', function($scope, $stateParams) {
 });

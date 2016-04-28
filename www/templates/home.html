@@ -1,4 +1,4 @@
-<ion-view view-title="Home">
+<ion-view view-title="BeneAdd">
   <ion-header-bar>
     <h1 class="title" ng-hide="user">BeneAdd</h1>
     <h1 class="title" ng-show="user">Profile</h1>
@@ -13,7 +13,10 @@
     <!-- eligible but no user -->
     <div ng-show="eligible">
       <div ng-hide="user">
-        <a class="button button-block button-stable" href="#/app/create">
+        <div ng-show="showInstructions">
+          Please check your email to verify you account.
+        </div>
+        <a class="button button-block button-outline button-positive" href="#/app/create">
           Create Account
         </a>
         <button class="button button-block button-positive" ng-click="openModal('login')">
@@ -25,7 +28,7 @@
     <div ng-show="user">
       <div class="row">
         <div class="col">
-          <h3>Welcome {{user.first_name}} {{user.last_name}}</h3>
+          <h3>Hello {{user.first_name}}</h3>
         </div>
       </div>
       <!-- consent -->
@@ -40,16 +43,17 @@
       <!-- additional Info -->
       <div class="row" ng-show="consent">
         <div class="col">
-          <p>We need some more information from you. Please click the following fill out the additional information:</p>
+          <p>We need some more information from you. <br>Please click the following:</p>
 
-          <button class="button button-block button-positive" ng-click="openModal('additional-info')">
+          <a href="#/app/additional" class="button button-block button-outline button-positive">
             Additional Info
-          </button>
+          </a>
         </div>
       </div>
       <!-- survey -->
       <div class="row" ng-show="showSurvey">
         <div class="col">
+          <p>We have a survey for you. <br>Please take some time to fill it out.</p>
           <a href="#/app/survey" class="button button-block button-positive">
             Take Survey
           </a>

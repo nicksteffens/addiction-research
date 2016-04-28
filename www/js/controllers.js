@@ -440,7 +440,7 @@ angular.module('starter.controllers', [])
     }).then(function successCallback(response) {
       console.log('answers posted', response);
     }, function errorCallback(response) {
-      console.log('an error has ocurred', response);
+      console.log('error submitting answers', response.statusText);
     }).finally(function(){
       // reschedule notifications
       rescheduleSurvey();
@@ -685,7 +685,6 @@ angular.module('starter.controllers', [])
     }
 
     function updateUser(answers) {
-      debugger;
       $http({
         method: 'PUT',
         url: config.api.users+$scope.user.id,
@@ -693,9 +692,9 @@ angular.module('starter.controllers', [])
           user: answers
         }
       }).then(function successCallback(response) {
-        console.log('answers posted', response);
+        console.log('updated user');
       }, function errorCallback(response) {
-        console.log('an error has ocurred', response);
+        console.log('update user error', response.statusText);
       });
     }
 }])

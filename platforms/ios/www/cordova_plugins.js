@@ -139,9 +139,17 @@ module.exports = [
             "cordova.plugins.notification.local.core",
             "plugin.notification.local.core"
         ]
+    },
+    {
+        "file": "plugins/org.transistorsoft.cordova.background-geolocation/www/BackgroundGeoLocation.js",
+        "id": "org.transistorsoft.cordova.background-geolocation.BackgroundGeoLocation",
+        "pluginId": "org.transistorsoft.cordova.background-geolocation",
+        "clobbers": [
+            "plugins.backgroundGeoLocation"
+        ]
     }
 ];
-module.exports.metadata =
+module.exports.metadata = 
 // TOP OF METADATA
 {
     "com.telerik.plugins.healthkit": "0.4.2",

@@ -26,10 +26,6 @@
     "cordova-background-geolocation-lt",
     "cordova-plugin-geolocation",
     {
-      "locator": "https://github.com/transistorsoft/cordova-background-geolocation-lt.git",
-      "id": "com.transistorsoft.cordova.background-geolocation"
-    },
-    {
       "locator": "https://github.com/Telerik-Verified-Plugins/HealthKit.git",
       "id": "com.telerik.plugins.healthkit"
     }

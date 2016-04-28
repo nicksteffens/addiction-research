@@ -3,46 +3,47 @@
     <h1 class="title">Create</h1>
   </ion-header-bar>
   <ion-content>
-    <h3 class="title padding-top padding-left">Please fill out the following:</h3>
-    <form class="list list-inset" ng-submit="doCreate()">
-      <label class="item item-input item-stacked label">
-        <span class="input-label">First Name</span>
-        <input required type="text" ng-model="createUser.first_name" placeholder="First Name">
-      </label>
-      <label class="item item-input item-stacked label">
-        <span class="input-label">Last Name</span>
-        <input required type="text" ng-model="createUser.last_name" placeholder="Last Name">
-      </label>
-      <label class="item item-input item-stacked-label">
-        <span class="input-label">
-          Email
-          <small class="assertive" ng-show="errors.email">Must be valid email.</small>
-        </span>
-        <input required type="email" ng-model="createUser.email" placeholder="your_email@something.com" ng-blur="checkEmail()">
-      </label>
-      <label class="item item-input item-stacked-label">
-        <span class="input-label">Password</span>
-        <input required type="password" ng-model="createUser.password" placeholder="Password" ng-blur="checkPassword()">
-      </label>
-      <label class="item item-input item-stacked-label">
-        <span class="input-label">
-          Confirm Password
-          <small class="assertive" ng-show="errors.password">Passwords must match.</small>
-        </span>
-        <input required type="password" ng-model="createUser.confirm" placeholder="Confirm Password" ng-blur="checkPassword()">
-      </label>
+    <div ng-hide="loadSpinner">
+      <h3 class="title padding-top padding-left">Please fill out the following:</h3>
+      <form class="list list-inset" ng-submit="doCreate()">
+        <label class="item item-input item-stacked label">
+          <span class="input-label">First Name</span>
+          <input required type="text" ng-model="createUser.first_name" placeholder="First Name">
+        </label>
+        <label class="item item-input item-stacked label">
+          <span class="input-label">Last Name</span>
+          <input required type="text" ng-model="createUser.last_name" placeholder="Last Name">
+        </label>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">
+            Email
+            <small class="assertive" ng-show="errors.email">Must be valid email.</small>
+          </span>
+          <input required type="email" ng-model="createUser.email" placeholder="your_email@something.com" ng-blur="checkEmail()">
+        </label>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Password</span>
+          <input required type="password" ng-model="createUser.password" placeholder="Password" ng-blur="checkPassword()">
+        </label>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">
+            Confirm Password
+            <small class="assertive" ng-show="errors.password">Passwords must match.</small>
+          </span>
+          <input required type="password" ng-model="createUser.confirm" placeholder="Confirm Password" ng-blur="checkPassword()">
+        </label>
 
-      <label class="item item-input">
-        <span class="input-label">Phone Number</span>
-        <input type="tel" ng-model="createUser.phone" placeholder="(555) 555-5555">
-      </label>
-      <label class="item item-input">
-        <span class="input-label">Date of Birth</span>
-        <input required type="date" ng-model="createUser.date_of_birth">
-      </label>
-      <label class="item" ng-hide="hasErrors">
-        <button class="button button-block button-calm" type="submit">Create Account</button>
-      </label>
-    </form>
+        <label class="item item-input">
+          <span class="input-label">Phone Number</span>
+          <input type="tel" ng-model="createUser.phone" placeholder="(555) 555-5555">
+        </label>
+        <label class="item" ng-hide="hasErrors">
+          <button class="button button-block button-calm" type="submit">Create Account</button>
+        </label>
+      </form>
+    </div>
+    <div style="text-align:center;" class="padding-vertical" ng-show="loadSpinner">
+      <ion-spinner class="spinner"></ion-spinner>
+    </div>
   </ion-content>
 </ion-view>

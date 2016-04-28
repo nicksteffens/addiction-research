@@ -26,6 +26,9 @@ angular.module('starter.controllers', [])
       heart_rate: {
         unit: 'count/min'
       }
+    },
+    question: {
+      offset: 1 // used for indexing questions
     }
    };
    return config;
@@ -55,13 +58,14 @@ angular.module('starter.controllers', [])
   $scope.consent = JSON.parse(window.localStorage.getItem('consent'));
   $scope.showSurvey = false;
   $scope.showInstructions = false;
+  $scope.loadSpinner = false;
 
 
   $ionicPlatform.ready(function() {
     // =====================
     // healthkit permissions
     // =====================
-    if ( window.cordova ) {
+    if ( window.cordova && $cordovaHealthKit ) {
       $cordovaHealthKit.isAvailable().then(function(yes) {
         // Is available
         console.log('HK avail')
@@ -92,7 +96,7 @@ angular.module('starter.controllers', [])
     // =============
     // notifications
     // =============
-    if ( window.cordova ) {
+    if ( window.cordova && $cordovaLocalNotification) {
       // local notifications permissions
         $cordovaLocalNotification.hasPermission().then(function(hasPermission) {
           // console.log(hasPermission ? "has permissions" : "no permissions");
@@ -231,6 +235,7 @@ angular.module('starter.controllers', [])
   };
 
   $scope.doCreate = function() {
+    $scope.loadSpinner = true;
     var createUser = $scope.createUser;
     delete createUser.confirm;
 
@@ -241,10 +246,12 @@ angular.module('starter.controllers', [])
         "user": createUser
       }
     }).then( function successCallback(response) {
-      console.log('User created', response);
-
+      $scope.showInstructions = true;
+      $scope.loadSpinner = false ;
+      window.location.hash = '#/app/home';
     }, function errorCallback(response) {
       console.log('Create account error', response);
+      $scope.loadSpinner = false;
       alert('An Error has Occured, Please Try again');
     })
   };
@@ -391,15 +398,16 @@ angular.module('starter.controllers', [])
     for(var i = 0; i < questions.length; i++ ) {
       var questionType = questions[i].q_type;
 
+
       switch (questionType) {
         case 'boolean':
-          questionsArray.push('<irk-task><irk-boolean-question-step id="q'+questions[i].id+'" title="'+questions[i].question+'" text="Additional text can go here." true-text="Yes" false-text="No" /></irk-task>');
+          questionsArray.push('<irk-task><irk-boolean-question-step id="q'+(questions[i].id-config.question.offset)+'" title="'+questions[i].question+'" text="Additional text can go here." true-text="Yes" false-text="No" /></irk-task>');
           break;
         case 'scale':
-          questionsArray.push('<irk-task><irk-scale-question-step id="q'+questions[i].id+'" title="'+questions[i].question+'" text="1 being Never &amp; 5 Almost Always" min="1" max="5" step="1" value="3" /></irk-task>');
+          questionsArray.push('<irk-task><irk-scale-question-step id="q'+(questions[i].id-config.question.offset)+'" title="'+questions[i].question+'" text="1 being Never &amp; 5 Almost Always" min="1" max="5" step="1" value="3" /></irk-task>');
           break;
         case 'choice':
-          questionsArray.push('<irk-task><irk-text-choice-question-step id="q'+questions[i].id+'" title="'+questions[i].question+'" style="single"><irk-text-choice text="1 Never" value="1"></irk-text-choice><irk-text-choice text="2 Rarely" value="2"></irk-text-choice><irk-text-choice text="3 Sometimes" value="3"></irk-text-choice><irk-text-choice text="4 Often" value="4"></irk-text-choice><irk-text-choice text="5 Almost Alway" value="5"></irk-text-choice></irk-text-choice></irk-text-choice-question-step></irk-task>')
+          questionsArray.push('<irk-task><irk-text-choice-question-step id="q'+(questions[i].id-config.question.offset)+'" title="'+questions[i].question+'" style="single"><irk-text-choice text="1 Never" value="1"></irk-text-choice><irk-text-choice text="2 Rarely" value="2"></irk-text-choice><irk-text-choice text="3 Sometimes" value="3"></irk-text-choice><irk-text-choice text="4 Often" value="4"></irk-text-choice><irk-text-choice text="5 Almost Alway" value="5"></irk-text-choice></irk-text-choice></irk-text-choice-question-step></irk-task>')
           break;
       }
     }
@@ -411,21 +419,24 @@ angular.module('starter.controllers', [])
     var userId = JSON.parse(window.localStorage.user).id
 
     for(var i = 0; i < surveyResults.childResults.length; i++) {
-      var questionId = surveyResults.childResults[i].id.slice(1);
-      answersArray.push({
-        "answer": {
+      var questionId = parseInt(surveyResults.childResults[i].id.slice(1)) + config.question.offset;
+      // dont submit null results
+      if ( surveyResults.childResults[i].answer ) {
+        answersArray.push({
           "user_id": userId,
           "question_id": questionId,
           "answer": surveyResults.childResults[i].answer
-        }
-      });
+        });
+      }
+
     };
-    // TODO:
-    // how to post to answers shakir
+
     $http({
       method: 'POST',
       url: config.api.answers,
-      data: JSON.stringify(answersArray),
+      data: {
+        answer: answersArray
+      }
     }).then(function successCallback(response) {
       console.log('answers posted', response);
     }, function errorCallback(response) {
@@ -593,6 +604,9 @@ angular.module('starter.controllers', [])
     }
 
 }])
+// ==========================
+// Additional Info Controller
+// ==========================
 .controller('AdditionalInfoCtrl', [
   'config',
   '$scope',
@@ -603,6 +617,7 @@ angular.module('starter.controllers', [])
   '$cordovaHealthKit',
   function(config, $scope, $ionicModal, $ionicPlatform, $http, irkResults, $cordovaHealthKit) {
     irkResults = irkResults;
+    $scope.user = JSON.parse(window.localStorage.getItem('user'));
 
     $ionicModal.fromTemplateUrl('templates/additional-info-survey.html', {
       scope: $scope,
@@ -648,9 +663,7 @@ angular.module('starter.controllers', [])
       var date = results.end;
 
       updateHealthKit(answers, date);
-      // TODO:
-      // 1. PUT to the user on api
-      // 2. Update user in local storage
+      updateUser(answers);
     }
 
     function updateHealthKit(answer, date) {
@@ -663,12 +676,27 @@ angular.module('starter.controllers', [])
             console.log('weight error' + err);
           });
           // save height
-          $cordovaHealthKit.saveWeight(answer.height, config.healthkit.height.unit, date).then(function(v) {
+          $cordovaHealthKit.saveHeight(answer.height, config.healthkit.height.unit, date).then(function(v) {
           }, function(err) {
             console.log('height error' + err);
           });
         }, function(no) {});
       }
+    }
+
+    function updateUser(answers) {
+      debugger;
+      $http({
+        method: 'PUT',
+        url: config.api.users+$scope.user.id,
+        data: {
+          user: answers
+        }
+      }).then(function successCallback(response) {
+        console.log('answers posted', response);
+      }, function errorCallback(response) {
+        console.log('an error has ocurred', response);
+      });
     }
 }])
 .controller('SplashCtrl', function($scope, $stateParams) {

@@ -21,11 +21,9 @@ angular.module('starter.controllers', [])
         read: [
           'HKCharacteristicTypeIdentifierDateOfBirth',
           'HKQuantityTypeIdentifierWeight',
-          'HKQuantityTypeIdentifierHeight',
-          'HKQua'
+          'HKQuantityTypeIdentifierHeight'
         ],
         write: [
-          'HKCharacteristicTypeIdentifierDateOfBirth',
           'HKQuantityTypeIdentifierHeight',
           'HKQuantityTypeIdentifierWeight'
         ]

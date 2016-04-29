@@ -20,7 +20,7 @@ angular.module('starter.controllers', [])
       permissions: {
         read: [
           'HKCharacteristicTypeIdentifierDateOfBirth',
-          'HKQuantityTypeIdentifierBloodAlcoholContent',
+          'HKQuantityTypeIdentifierIdentifierBloodAlcoholContent',
           'HKQuantityTypeIdentifierHeartRate',
           'HKQuantityTypeIdentifierBodyMass',
           'HKQuantityTypeIdentifierHeight',
@@ -59,23 +59,30 @@ angular.module('starter.controllers', [])
   '$rootScope',
   '$cordovaLocalNotification',
   function(config, $scope, $ionicModal, $ionicPlatform, $cordovaGeolocation, $timeout, $cordovaHealthKit, $http, $rootScope, $cordovaLocalNotification) {
+  // localStorage stuff
+  $scope.user = JSON.parse(window.localStorage.getItem('user'));
+  $scope.lastSurveyed = JSON.parse(window.localStorage.getItem('lastSurveyed'));
+  $scope.healthkitLastedSample = JSON.parse(window.localStorage.getItem('healthkitLastedSample'));
+  $scope.eligible = JSON.parse(window.localStorage.getItem('eligible'));
+  $scope.consent = JSON.parse(window.localStorage.getItem('consent'));
 
   // constant vars
   $scope.loginData = {};
   $scope.createUser = {};
   $scope.errors = {};
   $scope.hasErrors = false;
-  $scope.user = JSON.parse(window.localStorage.getItem('user'));
   $scope.geolocation = {};
-  $scope.eligible = JSON.parse(window.localStorage.getItem('eligible'));
-  $scope.consent = JSON.parse(window.localStorage.getItem('consent'));
   $scope.showSurvey = false;
   $scope.showInstructions = false;
   $scope.loadSpinner = false;
+
   // computeds
   $scope.hasMissingData = function() {
     if($scope.user) {
-      return $scope.user.medical_id === null;
+      return !$scope.user.medical_id
+        || !$scope.user.date_of_birth
+        || !$scope.user.height
+        || !$scope.user.weight;
     }
     return false;
   }
@@ -92,31 +99,13 @@ angular.module('starter.controllers', [])
 
   $ionicPlatform.ready(function() {
     console.log('BeneAdd Ready');
-    // =====================
-    // healthkit permissions
-    // =====================
-    if ( window.cordova && $scope.user ) {
-      $cordovaHealthKit.isAvailable().then(function(yes) {
-        console.log('HK avail');
-      }, function(no) {
-        console.log('HK NOT avail');
-      });
-      $cordovaHealthKit.requestAuthorization(
-        config.healthkit.permissions.read,
-        config.healthkit.permissions.write
-      ).then(function(success) {
-        console.log('HK success');
-      }, function(err) {
-        console.log('HK error', err);
-      });
-    }
     // =============
     // notifications
     // =============
     if ( window.cordova && $cordovaLocalNotification) {
       // local notifications permissions
         $cordovaLocalNotification.hasPermission().then(function(hasPermission) {
-          // console.log(hasPermission ? "has permissions" : "no permissions");
+          console.log(hasPermission ? "notification has permissions" : "notification no permissions");
 
           if (!hasPermission) {
             registerPermission();
@@ -128,7 +117,7 @@ angular.module('starter.controllers', [])
       // hasScheduledPermission
       function hasScheduledPermission() {
         $cordovaLocalNotification.isPresent(12345, $scope).then(function(isPresent) {
-            // console.log(isPresent ? "scheduled note" : "no scheduled");
+            console.log(isPresent ? "scheduled note" : "no scheduled");
             if($scope.consent) {
               if (!isPresent) {
                 scheduleNotification();
@@ -148,13 +137,14 @@ angular.module('starter.controllers', [])
             every: config.notifications.every
           }).then(function (result) {
             // do something
+            console.log('notification scheduled ' + config.notifications.every);
           });
       }
 
       // register permissions
       function registerPermission() {
         $cordovaLocalNotification.registerPermission().then(function(registeredPermission) {
-          // console.log('registeredPermission');
+          console.log('notification permissions registered');
         });
       }
 
@@ -169,7 +159,6 @@ angular.module('starter.controllers', [])
           });
         })
       }
-
       // ====================
       // end of notifications
       // ====================
@@ -324,7 +313,7 @@ angular.module('starter.controllers', [])
   function updateGeolocation(position) {
     $scope.geolocation.lat  = position.coords.latitude;
     $scope.geolocation.long = position.coords.longitude;
-    $scope.geolocation.timestamp = position.timestamp;
+    $scope.geolocation.timestamp = new Date(position.timestamp);
     console.log('update geolocation'
       + $scope.geolocation.lat + '   '
       + $scope.geolocation.long + '\nat: '
@@ -634,136 +623,103 @@ angular.module('starter.controllers', [])
 .controller('AdditionalInfoCtrl', [
   'config',
   '$scope',
-  '$ionicModal',
   '$ionicPlatform',
   '$http',
-  'irkResults',
   '$cordovaHealthKit',
-  function(config, $scope, $ionicModal, $ionicPlatform, $http, irkResults, $cordovaHealthKit) {
-    irkResults = irkResults;
+  function(config, $scope, $ionicPlatform, $http, $cordovaHealthKit) {
+    // localStorage
     $scope.user = JSON.parse(window.localStorage.getItem('user'));
-
-    $ionicModal.fromTemplateUrl('templates/additional-info-survey.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      console.log('show modal');
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
-
-    $scope.openModal = function() {
-      $scope.modal.show();
+    $scope.lastSurveyed = JSON.parse(window.localStorage.getItem('lastSurveyed'));
+    $scope.healthkitLastedSample = JSON.parse(window.localStorage.getItem('healthkitLastedSample'));
+    // ctrl vars
+    $scope.additionalInfo = {
+      height: parseInt($scope.user.height),
+      weight: parseInt($scope.user.weight),
+      medical_id: $scope.user.medical_id
     };
 
-    $scope.closeModal = function() {
-      var surveyResults = irkResults.getResults();
-      // did they complete the survey
-      if (surveyResults.childResults.length > 0 && !surveyResults.canceled) {
-        updateInfo(surveyResults);
-      }
+    $scope.loadSpinner = false;
 
-      if ( surveyResults.canceled ) {
-        window.location.hash = "#/app/home";
-      }
-      $scope.modal.hide();
-    };
-    // Cleanup the modal when we're done with it!
-    $scope.$on('$destroy', function() {
-      $scope.modal.remove();
-    });
-    // Execute action on hide modal
-    $scope.$on('modal.hidden', function() {
-      // Execute action
-    });
-    // Execute action on remove modal
-    $scope.$on('modal.removed', function() {
-      // Execute action
-    });
-
-    function updateInfo(results) {
-      console.log(results);
-      var answers = results.childResults[0].answer;
-      var date = results.end;
-
-
-      updateUser(answers, date);
-    }
-
-    function updateHealthKit(answer, date) {
-      if( window.cordova ) {
-        // healthkit check
-        $cordovaHealthKit.isAvailable().then(function(yes) {
-          // save weight
-          $cordovaHealthKit.saveWeight(answer.weight, config.healthkit.weight.unit, date).then(function(v) {
-          }, function(err) {
-            console.log('weight error' + err);
-          });
-          // save height
-          $cordovaHealthKit.saveHeight(answer.height, config.healthkit.height.unit, date).then(function(v) {
-          }, function(err) {
-            console.log('height error' + err);
-          });
-        }, function(no) {});
-      }
-    }
-
-    function updateUser(answers) {
-      var dataObj = {
-        user: answers
-      };
-      $http.put(config.api.users+$scope.user.id, dataObj)
-      .then(function successCallback(response) {
-        // reset localStorage
-        window.localStorage.setItem('user', JSON.stringify(response.data.user));
-        updateHealthKit(answers, date);
-        // redirect home
-        window.location.hash = "#/app/home";
-      }, function errorCallback(response) {
-        alert('Error with the server. Please try again');
-        window.location.reload();
-        console.log('update user error', response.statusText);
-      });
-    }
-}])
-// ==============
-// PermissionCtrl
-// ==============
-.controller('PermissionCtrl', [
-  'config',
-  '$scope',
-  '$cordovaHealthKit',
-  function(config, $scope, $cordovaHealthKit) {
-    $scope.permissions = {};
-    $scope.hasCordova = window.cordova;
-
-    if( window.cordova ) {
-      $scope.updatePermissions = function() {
-        $cordovaHealthKit.requestAuthorization(
-          config.healthkit.permissions.read,
-          config.healthkit.permissions.write
-        ).then(function(success) {
-          console.log('HK success' + success);
-        }, function(err) {
-          console.log('HK error', err);
-        });
-      };
-      // is aval
+    // healthkit only
+    // Grabs data from the user if present
+    if ( window.cordova ) {
       $cordovaHealthKit.isAvailable().then(function(yes) {
         console.log('HK avail');
       }, function(no) {
         console.log('HK NOT avail');
-      }).finally(function() {
-        $scope.updatePermissions();
       });
+      // Request Permissions on Page Load
+      $cordovaHealthKit.requestAuthorization(
+        config.healthkit.permissions.read,
+        config.healthkit.permissions.write
 
-    } else {
-      $scope.updatePermissions = function() {
-        alert('No healthkit Present');
-      }
+      ).then(function(success) {
+        console.log('HK success' + success);
+
+      }, function(err) {
+        console.log('HK error', err);
+      });
+      // dob
+      $scope.additionalInfo.date_of_birth = $cordovaHealthKit.readDateOfBirth().then(
+        function(dob){
+          return dob;
+        },
+        function(err){
+          console.log("HK dob read err" + err)
+        }
+      );
+      // height
+      $scope.additionalInfo.height = $cordovaHealthKit.readHeight().then(
+        function(height) {
+          return height;
+        },
+        function(err) {
+          console.log('HK height read error' + err)
+        }
+      );
+      // weight
+      $scope.additionalInfo.weight = $cordovaHealthKit.readWeight().then(
+        function(weight) {
+          return weight;
+        },
+        function(err) {
+          console.log('HK weight read error' + err);
+        }
+      );
+    // end of healthkit population
     }
 
-  }
-])
+
+    $scope.submitAdditionalInfo = function() {
+      $http.put(config.api.users+$scope.user.id, $scope.additionalInfo)
+        .then(function successCallback(response) {
+          // reset localStorage
+          window.localStorage.setItem('user', JSON.stringify(response.data.user));
+          // updateHealthKit(answers, date);
+          // redirect home
+          window.location.hash = "#/app/home";
+        }, function errorCallback(response) {
+          alert('Error with the server. Please try again');
+          window.location.reload();
+          console.log('update user error', response.statusText);
+        });
+    }
+
+    $scope.updateHealthKit = function() {
+      var today = new Date();
+      if (window.cordova) {
+        // height
+        $cordovaHealthKit.saveHeight($scope.additionalInfo.height, config.healthkit.height.unit, today).then(
+          function(success) { console.log('HK Height Success');},
+          function(err) { console.log('HK Height error' + error);}
+        );
+        // weight
+        $cordovaHealthKit.saveWeight($scope.additionalInfo.weight, config.healthkit.weight.unit, today).then(
+          function(success) { console.log('HK Weight Success');},
+          function(err) { console.log('HK Weight error' + error);}
+        );
+      }
+    }
+}])
 .controller('SplashCtrl', function($scope, $stateParams) {
 });

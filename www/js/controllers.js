@@ -88,7 +88,7 @@ angular.module('starter.controllers', [])
   }
 
   $scope.nothingForUser = function() {
-    if($scope.user && !$scope.hasMissingData() && !$scope.showSurvey) {
+    if($scope.user && !$scope.hasMissingData() && !$scope.showSurvey && $scope.consent) {
       return true;
     }
 

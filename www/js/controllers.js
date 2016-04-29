@@ -716,5 +716,20 @@ angular.module('starter.controllers', [])
       });
     }
 }])
+// ==============
+// PermissionCtrl
+// ==============
+.controller('PermissionCtrl', [
+  'config',
+  '$scope',
+  '$ionicModal',
+  '$ionicPlatform',
+  '$http',
+  'irkResults',
+  '$cordovaHealthKit',
+  function(config, $scope, $ionicModal, $ionicPlatform, $http, irkResults, $cordovaHealthKit) {
+
+  }
+])
 .controller('SplashCtrl', function($scope, $stateParams) {
 });

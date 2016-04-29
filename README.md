@@ -1,52 +1,56 @@
 # BeneAdd
 An iOS phone app for helping researchers survey / monitor addicts
 
+Installing
+---
+1. Open the [project file](/platforms/ios/addiction-research.xcodeproj) in `Xcode`
+2. Once `xcode` is open connect you're device through `USB`
+3. Select your device on the top left.
+4. Hit the play button
+
 
 Configuration:
 ---
 Inside of [controllers.js](/www/js/controllers.js) there is a `config factory` with configuration data
 
-Here Are options:
+Options:
 - geolocation
-  * disable _for debugging polling_
-  * timeout _polling timeout default is every 10 seconds, in milliseconds_
+  * disable: `boolean` _for debugging polling_
+  * timeout: `int` _polling timeout default is every 10 seconds, in milliseconds_
 - api  _urls to database_
   * answers
   * login
   * questions
   * user
+  * geolocation
 - notifications:
-  * disable
-  * every _how often they are schduled possible choices_
-    * 'minute'
-    * 'weekly'
-    * 'monthly'
-
-
-Current List of ToDo's:
----
-- [ ] After create user page _nick_
-  * Instructions to confirm via email
-  * Login form
-- [ ] User profile page _nick_
-  * Height
-  * Weight
-  * Medical ID?
-  * POST / PATCH this info _shakir_
-- [x] Survey Questions
-- [ ] Goals
-  * Goal Creation Page
-  * POST / GET _shakir_
-- [ ] Activity Tracker
-  * Heartrate Tracking - Research with apple watch?
-  * GPS Tracking / Background tracking
-  * POST _shakir_
-- [ ] Notifications!!! _need help looking into_ _kevin?_
-
-Nick's Short listen
----
-- [x] GPS
-- [ ] Notifications on the daily to take survey
-- [ ] Questions and how to get them... _sync with shakir_
-  * In the mean time have it locally.
-- [ ] Login should now use Healthkit functions for height and weight
+  * disable: `boolean`
+  * every: `string` _how often they are schduled possible choices_
+    - 'minute'
+    - 'weekly'
+    - 'monthly'
+- healthkit
+  * query_length: `string`
+    - default: `month`
+    - `year`
+    - `month`
+    - `week`
+    - `daily`
+  * permissions _uses native healthkit values_
+    - read: `array`
+    - write: `array`
+  * height
+    - HK_type: `string` _native healthkit value_
+    - unit: `string` _native healthkit values_
+  * weight*
+    - HK_type: `string` _native healthkit value_
+    - unit: `string` _native healthkit values_
+  * heart_rate* *
+    - HK_type: `string` _native healthkit value_
+    - unit: `string` _native healthkit values_
+  * bac* * *
+    - HK_type: `string` _native healthkit value_
+    - unit: `string` _native healthkit values_
+  * steps* * * *
+    - HK_type: `string` _native healthkit value_
+    - unit: `string` _native healthkit values_

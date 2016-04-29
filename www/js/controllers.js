@@ -9,7 +9,9 @@ angular.module('starter.controllers', [])
        answers: 'http://addictionresearch.herokuapp.com/answers',
        login: 'http://addictionresearch.herokuapp.com/sessions',
        questions: 'http://addictionresearch.herokuapp.com/questions',
-       users: 'http://addictionresearch.herokuapp.com/users/'
+       users: 'http://addictionresearch.herokuapp.com/users/',
+       geolocation: 'http://addictionresearch.herokuapp.com/geolocation/',
+       healthkit: 'http://addictionresearch.herokuapp.com/healthkit/'
      },
      notifications: {
       disable: false, // for debugging only

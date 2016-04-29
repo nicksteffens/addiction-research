@@ -65,6 +65,7 @@ angular.module('starter.controllers', [])
   $scope.healthkitLastedSample = JSON.parse(window.localStorage.getItem('healthkitLastedSample'));
   $scope.eligible = JSON.parse(window.localStorage.getItem('eligible'));
   $scope.consent = JSON.parse(window.localStorage.getItem('consent'));
+  $scope.pendingSurvey = JSON.parse(window.localStorage.getItem('pendingSurvey'));
 
   // constant vars
   $scope.loginData = {};
@@ -72,7 +73,6 @@ angular.module('starter.controllers', [])
   $scope.errors = {};
   $scope.hasErrors = false;
   $scope.geolocation = {};
-  $scope.showSurvey = false;
   $scope.showInstructions = false;
   $scope.loadSpinner = false;
 
@@ -88,7 +88,7 @@ angular.module('starter.controllers', [])
   }
 
   $scope.nothingForUser = function() {
-    if($scope.user && !$scope.hasMissingData() && !$scope.showSurvey && $scope.consent) {
+    if($scope.user && !$scope.hasMissingData() && !$scope.pendingSurvey && $scope.consent) {
       return true;
     }
 
@@ -152,10 +152,11 @@ angular.module('starter.controllers', [])
       function listenForNotificationClick() {
         // console.log('listening for click');
         $rootScope.$on('$cordovaLocalNotification:click', function(event, notification, state) {
-
+          console.log('notification clicked');
           $cordovaLocalNotification.cancelAll().then(function(action) {
             console.log('notification canceled');
-            $scope.showSurvey = true;
+            $scope.pendingSurvey = true;
+            window.localStorage.setItem('pendingSurvey', true);
           });
         })
       }
@@ -341,6 +342,7 @@ angular.module('starter.controllers', [])
 
   $scope.noSurvey = function() {
     $scope.canSurvey = false;
+    window.localStorage.setItem('pendingSurvey', false);
   }
 
   $scope.openModal = function() {
@@ -468,6 +470,7 @@ angular.module('starter.controllers', [])
         $scope.loadSpinner = false;
         // do something
         console.log('notification rescheduled');
+        window.localStorage.setItem('pendingSurvey', false);
         window.location.hash = "#/app/home";
       });
     } else {
@@ -478,6 +481,7 @@ angular.module('starter.controllers', [])
       $scope.hideGate = false;
       $scope.loadSpinner = false;
       window.location.hash = "#/app/home";
+      window.localStorage.setItem('pendingSurvey', false);
     }
   }
 

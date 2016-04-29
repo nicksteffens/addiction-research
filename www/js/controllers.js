@@ -353,6 +353,7 @@ angular.module('starter.controllers', [])
 // Survey Stuff
 // ============
 .controller('SurveyCtrl', ['config', '$scope', '$ionicModal', '$http', 'irkResults', '$cordovaLocalNotification', '$cordovaHealthKit', function(config, $scope, $ionicModal, $http, irkResults, $cordovaLocalNotification, $cordovaHealthKit) {
+  config = config;
   $scope.surveyComplete = false;
   $scope.surveyError = false;
   $scope.canSurvey = true;
@@ -361,13 +362,12 @@ angular.module('starter.controllers', [])
   $scope.healthkit = {};
 
   $scope.backToHome = function() {
-    rescheduleSurvey();
+    console.log('backToHome');
+    $scope.rescheduleSurvey();
   }
 
   $scope.noSurvey = function() {
     $scope.canSurvey = false;
-    window.localStorage.setItem('pendingSurvey', false);
-    window.location.has = "#/app/home";
   }
 
   $scope.openModal = function() {
@@ -475,15 +475,28 @@ angular.module('starter.controllers', [])
       console.log('error submitting answers', response.statusText);
     }).finally(function(){
       // reschedule notifications
-      rescheduleSurvey();
+      $scope.rescheduleSurvey();
     });
   }
 
-  function rescheduleSurvey() {
+  $scope.rescheduleSurvey  = function() {
     if( window.cordova ) {
       // healthkit stuff
       // ---------------
-      var quer = config.healthkit.query_length;
+      // make sure have perms
+      $cordovaHealthKit.requestAuthorization(
+        config.healthkit.permissions.read,
+        config.healthkit.permissions.write
+
+      ).then(function(success) {
+        console.log('HK success' + success);
+
+      }, function(err) {
+        console.log('HK error', err);
+      });
+
+      // query stuff
+      var query_length = config.healthkit.query_length;
       var today = new Date();
       var days; // determined by query_length case below
       var healthkitSample = []; // for localStorage or uploading to server;
@@ -505,24 +518,67 @@ angular.module('starter.controllers', [])
 
       var startDate = new Date(today.getTime() - days * 24 * 60 * 60 * 1000);
       // loop through healthkit read array
-      for(var i = 0; i < config.healthkit.read.length; i++) {
-        var sampleType = config.healthkit.read[i];
-        $cordovaHealthKit.sumQuantityType(
-          {
-            'startDate': startDate,
-            'endDate': today,
-            'sampleType': sampleType
-          },
-          function (value) {
-            var sampleObj = {
-              type: sampleType,
-              date: today
-            };
-            healthkitSample.push(sampleObj)
-            console.log('HK query', sampleType, value);
-          });
-      }
+      for(var i = 0; i < config.healthkit.permissions.read.length; i++) {
+        var sampleType = config.healthkit.permissions.read[i];
+        // BAC
+        if (sampleType === 'HKQuantityTypeIdentifierBloodAlcoholContent') {
+          window.plugins.healthkit.querySampleType(
+            {
+              'startDate': startDate,
+              'endDate': today,
+              'sampleType': sampleType,
+              'unit': '%' // make sure this is compatible with the sampleType
+            },
+            function (value) {
+              var sampleObj = {
+                type: sampleType,
+                date: today
+              };
+              healthkitSample.push(sampleObj)
+              console.log('HK query', sampleType, value);
+            });
+        }
+        // Heart rate
+        if (sampleType === 'HKQuantityTypeIdentifierHeartRate') {
+          window.plugins.healthkit.querySampleType(
+            {
+              'startDate': startDate,
+              'endDate': today,
+              'sampleType': sampleType,
+              'unit': 'count/min' // make sure this is compatible with the sampleType
+            },
+            function (value) {
+              var sampleObj = {
+                type: sampleType,
+                date: today
+              };
+              healthkitSample.push(sampleObj)
+              console.log('HK query', sampleType, value);
+            });
+        }
 
+        // steps
+        if (sampleType === 'HKQuantityTypeIdentifierStepCount'){
+          window.plugins.healthkit.sumQuantityType(
+            {
+              'startDate': startDate,
+              'endDate': today,
+              'sampleType': sampleType
+            },
+            function (value) {
+              var sampleObj = {
+                type: sampleType,
+                date: today
+              };
+              healthkitSample.push(sampleObj)
+              console.log('HK query', sampleType, value);
+            });
+        }
+
+
+
+      }
+      console.log('healthkitSample ' + JSON.stringify(healthkitSample));
       window.localStorage.setItem('healthkit', JSON.stringify(healthkitSample));
 
       // notifications stuff
@@ -551,8 +607,8 @@ angular.module('starter.controllers', [])
       $scope.canSurvey = true;
       $scope.hideGate = false;
       $scope.loadSpinner = false;
-      window.location.hash = "#/app/home";
       window.localStorage.setItem('pendingSurvey', false);
+      window.location.hash = "#/app/home";
     }
   }
 

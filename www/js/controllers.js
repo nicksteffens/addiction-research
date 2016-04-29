@@ -17,10 +17,15 @@ angular.module('starter.controllers', [])
     },
     // taken from healthkit documentation
     healthkit: {
+      // NOTE:
+      // @param string
+      // default: 'month'
+      // options: 'day', 'week', 'month', 'year'
+      query_length: 'month',
       permissions: {
         read: [
           'HKCharacteristicTypeIdentifierDateOfBirth',
-          'HKQuantityTypeIdentifierIdentifierBloodAlcoholContent',
+          'HKQuantityTypeIdentifierBloodAlcoholContent',
           'HKQuantityTypeIdentifierHeartRate',
           'HKQuantityTypeIdentifierBodyMass',
           'HKQuantityTypeIdentifierHeight',
@@ -32,13 +37,24 @@ angular.module('starter.controllers', [])
         ]
       },
       height: {
+        HK_type: 'HKQuantityTypeIdentifierHeight',
         unit: 'in'
       },
       weight: {
+        HK_type: 'HKQuantityTypeIdentifierBodyMass',
         unit: 'lb'
       },
       heart_rate: {
-        unit: 'count/min'
+        HK_type: 'HKQuantityTypeIdentifierHeartRate',
+        unit: 'count'
+      },
+      bac: {
+        HK_type: 'HKQuantityTypeIdentifierBloodAlcoholContent',
+        unit: '%'
+      },
+      steps: {
+        HK_type: 'HKQuantityTypeIdentifierStepCount',
+        unit: 'count'
       }
     },
     question: {
@@ -95,7 +111,6 @@ angular.module('starter.controllers', [])
     return false;
 
   }
-
 
   $ionicPlatform.ready(function() {
     console.log('BeneAdd Ready');
@@ -229,7 +244,7 @@ angular.module('starter.controllers', [])
 
     }, function errorCallback(response) {
       console.log('an error has ocurred', response);
-      alert('An Error has Occured, Please Try again');
+      alert('Error with the Server, Please Try again');
     });
   };
 
@@ -237,6 +252,13 @@ angular.module('starter.controllers', [])
     window.localStorage.removeItem('user');
     $scope.user = {};
     $scope.closeModal('logout');
+
+    if ( window.cordova ) {
+      $cordovaLocalNotification.cancelAll().then(function(action) {
+        console.log('all notifications canceled');
+      });
+    }
+    
     window.location.hash = '#/app/home';
     window.location.reload();
   };
@@ -330,12 +352,13 @@ angular.module('starter.controllers', [])
 // ============
 // Survey Stuff
 // ============
-.controller('SurveyCtrl', ['config', '$scope', '$ionicModal', '$http', 'irkResults', '$cordovaLocalNotification', function(config, $scope, $ionicModal, $http, irkResults, $cordovaLocalNotification) {
+.controller('SurveyCtrl', ['config', '$scope', '$ionicModal', '$http', 'irkResults', '$cordovaLocalNotification', '$cordovaHealthKit', function(config, $scope, $ionicModal, $http, irkResults, $cordovaLocalNotification, $cordovaHealthKit) {
   $scope.surveyComplete = false;
   $scope.surveyError = false;
   $scope.canSurvey = true;
   $scope.hideGate = false;
   $scope.loadSpinner = false;
+  $scope.healthkit = {};
 
   $scope.backToHome = function() {
     rescheduleSurvey();
@@ -457,6 +480,52 @@ angular.module('starter.controllers', [])
 
   function rescheduleSurvey() {
     if( window.cordova ) {
+      // healthkit stuff
+      // ---------------
+      var quer = config.healthkit.query_length;
+      var today = new Date();
+      var days; // determined by query_length case below
+      var healthkitSample = []; // for localStorage or uploading to server;
+
+      switch (query_length) {
+        case 'daily':
+          days = 1;
+          break;
+        case 'weekly':
+          days = 7;
+          break;
+        case 'month':
+          days = 30;
+          break;
+        case 'year':
+          days = 365;
+          break;
+      }
+
+      var startDate = new Date(today.getTime() - days * 24 * 60 * 60 * 1000);
+      // loop through healthkit read array
+      for(var i = 0; i < config.healthkit.read.length; i++) {
+        var sampleType = config.healthkit.read[i];
+        $cordovaHealthKit.sumQuantityType(
+          {
+            'startDate': startDate,
+            'endDate': today,
+            'sampleType': sampleType
+          },
+          function (value) {
+            var sampleObj = {
+              type: sampleType,
+              date: today
+            };
+            healthkitSample.push(sampleObj)
+            console.log('HK query', sampleType, value);
+          });
+      }
+
+      window.localStorage.setItem('healthkit', JSON.stringify(healthkitSample));
+
+      // notifications stuff
+      // ------------------
       $cordovaLocalNotification.schedule({
         id: 12345,
         title: 'You have pending Survey',
@@ -614,7 +683,7 @@ angular.module('starter.controllers', [])
       if ( consent.hasConsented ) {
         window.localStorage.setItem('consent', JSON.stringify(consent));
         $scope.consent = window.localStorage.getItem('consent');
-
+        window.localStorage.setItem('pendingSurvey', true);
         window.location.hash = "#/app/home";
       }
 

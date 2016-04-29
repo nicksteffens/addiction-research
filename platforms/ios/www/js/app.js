@@ -18,6 +18,7 @@ angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', '
 
       // for click notifications
       window.cordova.plugins.notification.local.on('click', function (notification, state) {
+        console.log('notifiction clicked...');
         $timeout(function () {
           $rootScope.$broadcast('$cordovaLocalNotification:click', notification, state);
         });

@@ -9,7 +9,9 @@ angular.module('starter.controllers', [])
        answers: 'http://addictionresearch.herokuapp.com/answers',
        login: 'http://addictionresearch.herokuapp.com/sessions',
        questions: 'http://addictionresearch.herokuapp.com/questions',
-       users: 'http://addictionresearch.herokuapp.com/users/'
+       users: 'http://addictionresearch.herokuapp.com/users/',
+       geolocation: 'http://addictionresearch.herokuapp.com/geolocation/',
+       healthkit: 'http://addictionresearch.herokuapp.com/healthkit/'
      },
      notifications: {
       disable: false, // for debugging only
@@ -242,9 +244,9 @@ angular.module('starter.controllers', [])
       $scope.modal.hide();
       window.location.hash = '#/app/profile';
 
-    }, function errorCallback(response) {
-      console.log('an error has ocurred', response);
-      alert('Error with the Server, Please Try again');
+    }, function errorCallback(err) {
+      console.log('login error ' + err.status +' '+ err.error);
+      alert('Could not login, Please Try again');
     });
   };
 
@@ -335,13 +337,27 @@ angular.module('starter.controllers', [])
 
 
   function updateGeolocation(position) {
-    $scope.geolocation.lat  = position.coords.latitude;
-    $scope.geolocation.long = position.coords.longitude;
+    $scope.geolocation.latitude  = position.coords.latitude;
+    $scope.geolocation.longitude = position.coords.longitude;
     $scope.geolocation.timestamp = new Date(position.timestamp);
     console.log('update geolocation'
       + $scope.geolocation.lat + '   '
       + $scope.geolocation.long + '\nat: '
       + $scope.geolocation.timestamp
+    );
+
+    var dataObj = {
+      "geolocation": $scope.getLocation
+    }
+
+    // http post
+    $http.post(config.api.geolocation, dataObj).then(
+      function(success) {
+        console.log('geo posted');
+      },
+      function(err) {
+        console.log('geo error')
+      }
     );
   }
 

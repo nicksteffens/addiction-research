@@ -244,9 +244,9 @@ angular.module('starter.controllers', [])
       $scope.modal.hide();
       window.location.hash = '#/app/profile';
 
-    }, function errorCallback(response) {
-      console.log('an error has ocurred', response);
-      alert('Error with the Server, Please Try again');
+    }, function errorCallback(err) {
+      console.log('login error ' + err.status +' '+ err.error);
+      alert('Could not login, Please Try again');
     });
   };
 
@@ -337,13 +337,27 @@ angular.module('starter.controllers', [])
 
 
   function updateGeolocation(position) {
-    $scope.geolocation.lat  = position.coords.latitude;
-    $scope.geolocation.long = position.coords.longitude;
+    $scope.geolocation.latitude  = position.coords.latitude;
+    $scope.geolocation.longitude = position.coords.longitude;
     $scope.geolocation.timestamp = new Date(position.timestamp);
     console.log('update geolocation'
       + $scope.geolocation.lat + '   '
       + $scope.geolocation.long + '\nat: '
       + $scope.geolocation.timestamp
+    );
+
+    var dataObj = {
+      "geolocation": $scope.getLocation
+    }
+
+    // http post
+    $http.post(config.api.geolocation, dataObj).then(
+      function(success) {
+        console.log('geo posted');
+      },
+      function(err) {
+        console.log('geo error')
+      }
     );
   }
 
@@ -501,7 +515,7 @@ angular.module('starter.controllers', [])
       var query_length = config.healthkit.query_length;
       var today = new Date();
       var days; // determined by query_length case below
-      var healthkitSample = []; // for localStorage or uploading to server;
+      var healthkitSample = {}; // for localStorage or uploading to server;
 
       switch (query_length) {
         case 'daily':
@@ -519,6 +533,8 @@ angular.module('starter.controllers', [])
       }
 
       var startDate = new Date(today.getTime() - days * 24 * 60 * 60 * 1000);
+
+      healthkitSample.timestamp = today;
       // loop through healthkit read array
       for(var i = 0; i < config.healthkit.permissions.read.length; i++) {
         var sampleType = config.healthkit.permissions.read[i];
@@ -532,12 +548,9 @@ angular.module('starter.controllers', [])
               'unit': '%' // make sure this is compatible with the sampleType
             },
             function (value) {
-              var sampleObj = {
-                type: sampleType,
-                date: today
-              };
-              healthkitSample.push(sampleObj)
+              healthkitSample.bac = value;
               console.log('HK query', sampleType, value);
+
             });
         }
         // Heart rate
@@ -550,11 +563,7 @@ angular.module('starter.controllers', [])
               'unit': 'count/min' // make sure this is compatible with the sampleType
             },
             function (value) {
-              var sampleObj = {
-                type: sampleType,
-                date: today
-              };
-              healthkitSample.push(sampleObj)
+              healthkitSample.heart_rate = value;
               console.log('HK query', sampleType, value);
             });
         }
@@ -568,20 +577,45 @@ angular.module('starter.controllers', [])
               'sampleType': sampleType
             },
             function (value) {
-              var sampleObj = {
-                type: sampleType,
-                date: today
-              };
-              healthkitSample.push(sampleObj)
+              healthkitSample.steps = value;
               console.log('HK query', sampleType, value);
             });
         }
 
-
-
+        // height
+        $cordovaHealthKit.readHeight().then(
+          function(height) {
+            healthkitSample.height = height;
+          },
+          function(err) {
+            console.log('HK height read error' + err)
+          }
+        );
+        // weight
+        $cordovaHealthKit.readWeight().then(
+          function(weight) {
+            healthkitSample.weight = weight;
+          },
+          function(err) {
+            console.log('HK weight read error' + err);
+          }
+        );
       }
       console.log('healthkitSample ' + JSON.stringify(healthkitSample));
       window.localStorage.setItem('healthkit', JSON.stringify(healthkitSample));
+
+      var dataObj = {
+        healthkit: healthkitSample
+      };
+
+      $http.post(config.api.healthkit, JSON.stringify(dataObj)).then(
+        function(success) {
+          console.log('healthkit post successful');
+        },
+        function(err) {
+          console.log('healthkit post error' + err.err);
+        }
+      );
 
       // notifications stuff
       // ------------------

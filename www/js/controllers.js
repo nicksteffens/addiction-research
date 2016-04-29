@@ -17,6 +17,19 @@ angular.module('starter.controllers', [])
     },
     // taken from healthkit documentation
     healthkit: {
+      permissions: {
+        read: [
+          'HKCharacteristicTypeIdentifierDateOfBirth',
+          'HKQuantityTypeIdentifierWeight',
+          'HKQuantityTypeIdentifierHeight',
+          'HKQua'
+        ],
+        write: [
+          'HKCharacteristicTypeIdentifierDateOfBirth',
+          'HKQuantityTypeIdentifierHeight',
+          'HKQuantityTypeIdentifierWeight'
+        ]
+      },
       height: {
         unit: 'in'
       },
@@ -33,7 +46,6 @@ angular.module('starter.controllers', [])
    };
    return config;
  }])
-
 .controller('AppCtrl', [
   'config',
   '$scope',
@@ -78,36 +90,21 @@ angular.module('starter.controllers', [])
 
 
   $ionicPlatform.ready(function() {
+    console.log('BeneAdd Ready');
     // =====================
     // healthkit permissions
     // =====================
-    if ( window.cordova && $cordovaHealthKit ) {
-      $cordovaHealthKit.isAvailable().then(function(yes) {
-        // Is available
-        console.log('HK avail')
-      }, function(no) {
-        console.log('no HK')
-        requestHealthKit();
-      });
+    if ( window.cordova && $scope.user ) {
+      $cordovaHealthKit.requestAuthorization(
+        config.healthkit.permissions.read,
+        config.healthkit.permissions.write
+      ).then(function(success) {
+        console.log('HK success');
+      }, function(err) {
+        console.log('HK error', err);
+      }).finally(function(){
 
-      function requestHealthKit() {
-        $cordovaHealthKit.requestAuthorization(
-          [
-            'HKCharacteristicTypeIdentifierDateOfBirth',
-            'HKQuantityTypeIdentifierWeight',
-            'HKQuantityTypeIdentifierHeight'
-          ],
-          [
-            'HKCharacteristicTypeIdentifierDateOfBirth',
-            'HKQuantityTypeIdentifierHeight',
-            'HKQuantityTypeIdentifierWeight'
-          ]
-        ).then(function(success) {
-          $scope.granted = true;
-        }, function(err) {
-          $scope.granted = false;
-        });
-      }
+      });
     }
     // =============
     // notifications
@@ -480,6 +477,14 @@ angular.module('starter.controllers', [])
         console.log('notification rescheduled');
         window.location.hash = "#/app/home";
       });
+    } else {
+      // reset scope
+      $scope.surveyComplete = false;
+      $scope.surveyError = false;
+      $scope.canSurvey = true;
+      $scope.hideGate = false;
+      $scope.loadSpinner = false;
+      window.location.hash = "#/app/home";
     }
   }
 
@@ -677,8 +682,8 @@ angular.module('starter.controllers', [])
       var answers = results.childResults[0].answer;
       var date = results.end;
 
-      updateHealthKit(answers, date);
-      updateUser(answers);
+
+      updateUser(answers, date);
     }
 
     function updateHealthKit(answer, date) {
@@ -707,6 +712,7 @@ angular.module('starter.controllers', [])
       .then(function successCallback(response) {
         // reset localStorage
         window.localStorage.setItem('user', JSON.stringify(response.data.user));
+        updateHealthKit(answers, date);
         // redirect home
         window.location.hash = "#/app/home";
       }, function errorCallback(response) {
@@ -722,12 +728,12 @@ angular.module('starter.controllers', [])
 .controller('PermissionCtrl', [
   'config',
   '$scope',
-  '$ionicModal',
-  '$ionicPlatform',
-  '$http',
-  'irkResults',
   '$cordovaHealthKit',
-  function(config, $scope, $ionicModal, $ionicPlatform, $http, irkResults, $cordovaHealthKit) {
+  function(config, $scope, $cordovaHealthKit) {
+    $scope.permissions = {};
+    if( window.cordova ) {
+
+    }
 
   }
 ])

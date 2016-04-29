@@ -20,12 +20,15 @@ angular.module('starter.controllers', [])
       permissions: {
         read: [
           'HKCharacteristicTypeIdentifierDateOfBirth',
-          'HKQuantityTypeIdentifierWeight',
-          'HKQuantityTypeIdentifierHeight'
+          'HKQuantityTypeIdentifierIdentifierBloodAlcoholContent',
+          'HKQuantityTypeIdentifierHeartRate',
+          'HKQuantityTypeIdentifierBodyMass',
+          'HKQuantityTypeIdentifierHeight',
+          'HKQuantityTypeIdentifierStepCount'
         ],
         write: [
           'HKQuantityTypeIdentifierHeight',
-          'HKQuantityTypeIdentifierWeight'
+          'HKQuantityTypeIdentifierBodyMass'
         ]
       },
       height: {
@@ -93,6 +96,11 @@ angular.module('starter.controllers', [])
     // healthkit permissions
     // =====================
     if ( window.cordova && $scope.user ) {
+      $cordovaHealthKit.isAvailable().then(function(yes) {
+        console.log('HK avail');
+      }, function(no) {
+        console.log('HK NOT avail');
+      });
       $cordovaHealthKit.requestAuthorization(
         config.healthkit.permissions.read,
         config.healthkit.permissions.write
@@ -100,8 +108,6 @@ angular.module('starter.controllers', [])
         console.log('HK success');
       }, function(err) {
         console.log('HK error', err);
-      }).finally(function(){
-
       });
     }
     // =============
@@ -729,8 +735,32 @@ angular.module('starter.controllers', [])
   '$cordovaHealthKit',
   function(config, $scope, $cordovaHealthKit) {
     $scope.permissions = {};
-    if( window.cordova ) {
+    $scope.hasCordova = window.cordova;
 
+    if( window.cordova ) {
+      $scope.updatePermissions = function() {
+        $cordovaHealthKit.requestAuthorization(
+          config.healthkit.permissions.read,
+          config.healthkit.permissions.write
+        ).then(function(success) {
+          console.log('HK success' + success);
+        }, function(err) {
+          console.log('HK error', err);
+        });
+      };
+      // is aval
+      $cordovaHealthKit.isAvailable().then(function(yes) {
+        console.log('HK avail');
+      }, function(no) {
+        console.log('HK NOT avail');
+      }).finally(function() {
+        $scope.updatePermissions();
+      });
+
+    } else {
+      $scope.updatePermissions = function() {
+        alert('No healthkit Present');
+      }
     }
 
   }

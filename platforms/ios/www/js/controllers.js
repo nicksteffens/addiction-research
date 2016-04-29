@@ -166,13 +166,14 @@ angular.module('starter.controllers', [])
     }
   });
 
-
+  // Root re assign Vars
   $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
     // regrab locals
     if (toState.url === '/home') {
       $scope.eligible = JSON.parse(window.localStorage.getItem('eligible'));
       $scope.consent = JSON.parse(window.localStorage.getItem('consent'));
       $scope.user = JSON.parse(window.localStorage.getItem('user'));
+      $scope.pendingSurvey = JSON.parse(window.localStorage.getItem('pendingSurvey'));
     }
   });
 

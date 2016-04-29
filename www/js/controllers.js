@@ -258,7 +258,7 @@ angular.module('starter.controllers', [])
         console.log('all notifications canceled');
       });
     }
-    
+
     window.location.hash = '#/app/home';
     window.location.reload();
   };
@@ -367,6 +367,7 @@ angular.module('starter.controllers', [])
   $scope.noSurvey = function() {
     $scope.canSurvey = false;
     window.localStorage.setItem('pendingSurvey', false);
+    window.location.has = "#/app/home";
   }
 
   $scope.openModal = function() {

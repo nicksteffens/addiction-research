@@ -112,7 +112,6 @@ angular.module('starter.controllers', [])
 
   }
 
-
   $ionicPlatform.ready(function() {
     console.log('BeneAdd Ready');
     // =============
@@ -245,7 +244,7 @@ angular.module('starter.controllers', [])
 
     }, function errorCallback(response) {
       console.log('an error has ocurred', response);
-      alert('An Error has Occured, Please Try again');
+      alert('Error with the Server, Please Try again');
     });
   };
 
@@ -253,6 +252,13 @@ angular.module('starter.controllers', [])
     window.localStorage.removeItem('user');
     $scope.user = {};
     $scope.closeModal('logout');
+
+    if ( window.cordova ) {
+      $cordovaLocalNotification.cancelAll().then(function(action) {
+        console.log('all notifications canceled');
+      });
+    }
+    
     window.location.hash = '#/app/home';
     window.location.reload();
   };

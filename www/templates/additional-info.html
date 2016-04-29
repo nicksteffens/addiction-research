@@ -3,5 +3,45 @@
     <h1 class="title">Additional Info</h1>
   </ion-header-bar>
   <ion-content class="padding">
+    <h3 class="title padding-top padding-left">Please fill out the following:</h3>
+    <form ng-hide="loadSpinner" ng-submit="submitAdditionalInfo()" class="list list-inset">
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Date of Birth</span>
+        <input type="date" ng-model="additionalInfo.date_of_birth">
+      </label>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Height</span>
+        <input type="number" placeholder="inches" ng-model="additionalInfo.height">
+      </label>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Weight</span>
+        <input type="number" placeholder="lbs" ng-model="additionalInfo.weight">
+      </label>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Medical id</span>
+        <input type="text" placeholder="XXXXXXXX" ng-model="additionalInfo.medical_id">
+      </label>
+      <button class="button button-block button-calm" type="submit">
+        Update Info
+      </button>
+    </form>
+    <div style="text-align:center;" class="padding-vertical" ng-show="loadSpinner">
+      <ion-spinner class="spinner"></ion-spinner>
+    </div>
+
   </ion-content>
 </ion-view>
+<!-- {
+  "id": 12,
+  "created_at": "2016-04-17T23:18:01.649Z",
+  "updated_at": "2016-04-29T03:55:38.257Z",
+  "auth_token": "NWhdzNaTAmxiEExYFhPz",
+  "email": "nsteffens+test@gmail.com",
+  "first_name": "Nick",
+  "last_name": "test",
+  "phone": null,
+  "date_of_birth": "1999-01-01",
+  "height": "68.0",
+  "weight": "150.0",
+  "medical_id": "something"
+} -->

@@ -107,15 +107,6 @@ angular.module('starter', ['ionic', 'ionicResearchKit', 'starter.controllers', '
         controller: 'AdditionalInfoCtrl'
       }
     }
-  })
-  .state('app.permissions', {
-    url: '/permissions',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/permissions.html',
-        controller: 'PermissionCtrl'
-      }
-    }
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/home');

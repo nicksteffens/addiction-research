@@ -21,6 +21,14 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Geolocation\"><param name=\"ios-package\" value=\"CDVLocation\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"SplashScreen\"><param name=\"ios-package\" value=\"CDVSplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         },
@@ -37,27 +45,11 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Keyboard\"><param name=\"ios-package\" onload=\"true\" value=\"IonicKeyboard\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"Geolocation\"><param name=\"ios-package\" value=\"CDVLocation\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"BackgroundGeoLocation\"><param name=\"ios-package\" value=\"CDVBackgroundGeoLocation\" /></feature>",
-                            "count": 2
-                        },
-                        {
-                            "xml": "<feature name=\"BackgroundGeolocation\"><param name=\"ios-package\" value=\"CDVBackgroundGeolocation\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"LocalNotification\"><param name=\"ios-package\" onload=\"true\" value=\"APPLocalNotification\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Keyboard\"><param name=\"ios-package\" onload=\"true\" value=\"IonicKeyboard\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -70,22 +62,6 @@
                             "xml": "<string />",
                             "count": 1
                         }
-                    ],
-                    "NSLocationAlwaysUsageDescription": [
-                        {
-                            "xml": "<string>This app requires background location tracking</string>",
-                            "count": 2
-                        },
-                        {
-                            "xml": "<string>TSLocationManager requires background location tracking</string>",
-                            "count": 1
-                        }
-                    ],
-                    "UIBackgroundModes": [
-                        {
-                            "xml": "<array><string>location</string></array>",
-                            "count": 3
-                        }
                     ]
                 }
             }
@@ -93,48 +69,39 @@
     },
     "installed_plugins": {
         "com.telerik.plugins.healthkit": {
-            "PACKAGE_NAME": "com.ionicframework.starter"
-        },
-        "cordova-plugin-console": {
-            "PACKAGE_NAME": "com.ionicframework.starter"
-        },
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "com.ionicframework.starter"
-        },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.ionicframework.starter"
-        },
-        "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "com.ionicframework.starter"
-        },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.ionicframework.starter"
-        },
-        "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "com.ionicframework.starter"
-        },
-        "cordova-plugin-compat": {
-            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
-        },
-        "cordova-plugin-geolocation": {
-            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
-        },
-        "cordova-plugin-dialogs": {
-            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
-        },
-        "cordova-plugin-background-geolocation-zencity": {
-            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
-        },
-        "com.transistorsoft.cordova.background-geolocation": {
             "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
         },
         "cordova-plugin-app-event": {
             "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
         },
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
+        },
         "de.appplant.cordova.plugin.local-notification": {
             "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
         },
-        "org.transistorsoft.cordova.background-geolocation": {
+        "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.ionicframework.addictionresearch596393"
         }
     },
@@ -173,29 +140,12 @@
             ]
         },
         {
-            "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
-            "id": "cordova-plugin-splashscreen.SplashScreen",
-            "pluginId": "cordova-plugin-splashscreen",
-            "clobbers": [
-                "navigator.splashscreen"
+            "file": "plugins/cordova-plugin-dialogs/www/notification.js",
+            "id": "cordova-plugin-dialogs.notification",
+            "pluginId": "cordova-plugin-dialogs",
+            "merges": [
+                "navigator.notification"
             ]
-        },
-        {
-            "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
-            "id": "cordova-plugin-statusbar.statusbar",
-            "pluginId": "cordova-plugin-statusbar",
-            "clobbers": [
-                "window.StatusBar"
-            ]
-        },
-        {
-            "file": "plugins/ionic-plugin-keyboard/www/ios/keyboard.js",
-            "id": "ionic-plugin-keyboard.keyboard",
-            "pluginId": "ionic-plugin-keyboard",
-            "clobbers": [
-                "cordova.plugins.Keyboard"
-            ],
-            "runs": true
         },
         {
             "file": "plugins/cordova-plugin-geolocation/www/Coordinates.js",
@@ -230,27 +180,19 @@
             ]
         },
         {
-            "file": "plugins/cordova-plugin-dialogs/www/notification.js",
-            "id": "cordova-plugin-dialogs.notification",
-            "pluginId": "cordova-plugin-dialogs",
-            "merges": [
-                "navigator.notification"
+            "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
+            "id": "cordova-plugin-splashscreen.SplashScreen",
+            "pluginId": "cordova-plugin-splashscreen",
+            "clobbers": [
+                "navigator.splashscreen"
             ]
         },
         {
-            "file": "plugins/cordova-plugin-background-geolocation-zencity/www/BackgroundGeoLocation.js",
-            "id": "cordova-plugin-background-geolocation-zencity.BackgroundGeoLocation",
-            "pluginId": "cordova-plugin-background-geolocation-zencity",
+            "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
+            "id": "cordova-plugin-statusbar.statusbar",
+            "pluginId": "cordova-plugin-statusbar",
             "clobbers": [
-                "plugins.backgroundGeoLocation"
-            ]
-        },
-        {
-            "file": "plugins/com.transistorsoft.cordova.background-geolocation/www/BackgroundGeolocation.js",
-            "id": "com.transistorsoft.cordova.background-geolocation.BackgroundGeolocation",
-            "pluginId": "com.transistorsoft.cordova.background-geolocation",
-            "clobbers": [
-                "window.BackgroundGeolocation"
+                "window.StatusBar"
             ]
         },
         {
@@ -279,23 +221,29 @@
                 "cordova.plugins.notification.local.core",
                 "plugin.notification.local.core"
             ]
+        },
+        {
+            "file": "plugins/ionic-plugin-keyboard/www/ios/keyboard.js",
+            "id": "ionic-plugin-keyboard.keyboard",
+            "pluginId": "ionic-plugin-keyboard",
+            "clobbers": [
+                "cordova.plugins.Keyboard"
+            ],
+            "runs": true
         }
     ],
     "plugin_metadata": {
         "com.telerik.plugins.healthkit": "0.4.2",
+        "cordova-plugin-app-event": "1.2.0",
+        "cordova-plugin-compat": "1.0.0",
         "cordova-plugin-console": "1.0.2",
         "cordova-plugin-device": "1.1.1",
+        "cordova-plugin-dialogs": "1.2.1",
+        "cordova-plugin-geolocation": "2.2.0",
         "cordova-plugin-splashscreen": "3.2.1",
         "cordova-plugin-statusbar": "2.1.2",
         "cordova-plugin-whitelist": "1.2.1",
-        "ionic-plugin-keyboard": "2.0.1",
-        "cordova-plugin-compat": "1.0.0",
-        "cordova-plugin-geolocation": "2.2.0",
-        "cordova-plugin-dialogs": "1.2.1",
-        "cordova-plugin-background-geolocation-zencity": "1.0.5",
-        "com.transistorsoft.cordova.background-geolocation": "1.5.1",
-        "cordova-plugin-app-event": "1.2.0",
         "de.appplant.cordova.plugin.local-notification": "0.8.4",
-        "org.transistorsoft.cordova.background-geolocation": "0.3.6"
+        "ionic-plugin-keyboard": "2.0.1"
     }
 }

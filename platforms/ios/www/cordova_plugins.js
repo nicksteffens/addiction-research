@@ -33,29 +33,12 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
-        "id": "cordova-plugin-splashscreen.SplashScreen",
-        "pluginId": "cordova-plugin-splashscreen",
-        "clobbers": [
-            "navigator.splashscreen"
+        "file": "plugins/cordova-plugin-dialogs/www/notification.js",
+        "id": "cordova-plugin-dialogs.notification",
+        "pluginId": "cordova-plugin-dialogs",
+        "merges": [
+            "navigator.notification"
         ]
-    },
-    {
-        "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
-        "id": "cordova-plugin-statusbar.statusbar",
-        "pluginId": "cordova-plugin-statusbar",
-        "clobbers": [
-            "window.StatusBar"
-        ]
-    },
-    {
-        "file": "plugins/ionic-plugin-keyboard/www/ios/keyboard.js",
-        "id": "ionic-plugin-keyboard.keyboard",
-        "pluginId": "ionic-plugin-keyboard",
-        "clobbers": [
-            "cordova.plugins.Keyboard"
-        ],
-        "runs": true
     },
     {
         "file": "plugins/cordova-plugin-geolocation/www/Coordinates.js",
@@ -90,27 +73,19 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-dialogs/www/notification.js",
-        "id": "cordova-plugin-dialogs.notification",
-        "pluginId": "cordova-plugin-dialogs",
-        "merges": [
-            "navigator.notification"
+        "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
+        "id": "cordova-plugin-splashscreen.SplashScreen",
+        "pluginId": "cordova-plugin-splashscreen",
+        "clobbers": [
+            "navigator.splashscreen"
         ]
     },
     {
-        "file": "plugins/cordova-plugin-background-geolocation-zencity/www/BackgroundGeoLocation.js",
-        "id": "cordova-plugin-background-geolocation-zencity.BackgroundGeoLocation",
-        "pluginId": "cordova-plugin-background-geolocation-zencity",
+        "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
+        "id": "cordova-plugin-statusbar.statusbar",
+        "pluginId": "cordova-plugin-statusbar",
         "clobbers": [
-            "plugins.backgroundGeoLocation"
-        ]
-    },
-    {
-        "file": "plugins/com.transistorsoft.cordova.background-geolocation/www/BackgroundGeolocation.js",
-        "id": "com.transistorsoft.cordova.background-geolocation.BackgroundGeolocation",
-        "pluginId": "com.transistorsoft.cordova.background-geolocation",
-        "clobbers": [
-            "window.BackgroundGeolocation"
+            "window.StatusBar"
         ]
     },
     {
@@ -139,26 +114,32 @@ module.exports = [
             "cordova.plugins.notification.local.core",
             "plugin.notification.local.core"
         ]
+    },
+    {
+        "file": "plugins/ionic-plugin-keyboard/www/ios/keyboard.js",
+        "id": "ionic-plugin-keyboard.keyboard",
+        "pluginId": "ionic-plugin-keyboard",
+        "clobbers": [
+            "cordova.plugins.Keyboard"
+        ],
+        "runs": true
     }
 ];
-module.exports.metadata =
+module.exports.metadata = 
 // TOP OF METADATA
 {
     "com.telerik.plugins.healthkit": "0.4.2",
+    "cordova-plugin-app-event": "1.2.0",
+    "cordova-plugin-compat": "1.0.0",
     "cordova-plugin-console": "1.0.2",
     "cordova-plugin-device": "1.1.1",
+    "cordova-plugin-dialogs": "1.2.1",
+    "cordova-plugin-geolocation": "2.2.0",
     "cordova-plugin-splashscreen": "3.2.1",
     "cordova-plugin-statusbar": "2.1.2",
     "cordova-plugin-whitelist": "1.2.1",
-    "ionic-plugin-keyboard": "2.0.1",
-    "cordova-plugin-compat": "1.0.0",
-    "cordova-plugin-geolocation": "2.2.0",
-    "cordova-plugin-dialogs": "1.2.1",
-    "cordova-plugin-background-geolocation-zencity": "1.0.5",
-    "com.transistorsoft.cordova.background-geolocation": "1.5.1",
-    "cordova-plugin-app-event": "1.2.0",
     "de.appplant.cordova.plugin.local-notification": "0.8.4",
-    "org.transistorsoft.cordova.background-geolocation": "0.3.6"
+    "ionic-plugin-keyboard": "2.0.1"
 }
 // BOTTOM OF METADATA
 });

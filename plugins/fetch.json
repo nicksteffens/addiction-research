@@ -87,15 +87,6 @@
         "is_top_level": false,
         "variables": {}
     },
-    "com.transistorsoft.cordova.background-geolocation": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/transistorsoft/cordova-background-geolocation-lt.git",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "de.appplant.cordova.plugin.local-notification": {
         "source": {
             "type": "git",

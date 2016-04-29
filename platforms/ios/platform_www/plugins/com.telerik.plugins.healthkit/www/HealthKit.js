@@ -1,4 +1,5 @@
-cordova.define("com.telerik.plugins.healthkit.HealthKit", function(require, exports, module) { function HealthKit() {
+cordova.define("com.telerik.plugins.healthkit.HealthKit", function(require, exports, module) {
+function HealthKit() {
 }
 
 var matches = function(object, typeOrClass) {
